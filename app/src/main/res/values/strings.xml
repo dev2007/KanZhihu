@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">看知乎</string>
+    <string name="action_settings">设置</string>
+    <string name="section_article">热门文章</string>
+    <string name="section_user">用户动态</string>
+    <string name="section_setting">设置</string>
+</resources>

@@ -16,9 +16,9 @@ import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.adapter.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
-
+    //fragmentpageradapter object.
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
+    // tablayout's viewpager.
     private ViewPager mViewPager;
 
     @Override
@@ -31,11 +31,17 @@ public class MainActivity extends AppCompatActivity {
         initFlotingActionButton();
     }
 
+    /**
+     * initialize toolbar
+     */
     private void initToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
+    /**
+     * initialize TabLayout & ViewPager & ViewPager's FragmentPagerAdapter
+     */
     private void initTabWithAdapter(){
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -49,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
     }
 
+    /**
+     * initialize floating action button.
+     */
     private void initFlotingActionButton(){
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

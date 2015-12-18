@@ -21,6 +21,7 @@ import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.adapter.RecyclerAdapter;
 import com.awu.kanzhihu.entity.PostsCollection;
 import com.awu.kanzhihu.util.Define;
+import com.awu.kanzhihu.view.DividerItemDecoration;
 import com.google.gson.Gson;
 
 /**
@@ -28,7 +29,7 @@ import com.google.gson.Gson;
  */
 public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
         Response.Listener<String>,
-        Response.ErrorListener{
+        Response.ErrorListener {
     private static final String TAG = "ArticleFragment";
 
     private ProgressDialog progressDialog;
@@ -37,7 +38,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private PostsCollection mPostsCollection;
     private RecyclerAdapter mAdapter;
     private RequestQueue mQueue;
-    private boolean isSwipeRefreshing =false;
+    private boolean isSwipeRefreshing = false;
 
     public ArticleFragment() {
         mPostsCollection = new PostsCollection();
@@ -57,13 +58,14 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         initRecyclerView();
     }
 
-    private void initProgressDialog(){
+    private void initProgressDialog() {
         progressDialog = new ProgressDialog(getActivity());
     }
 
-    private void initSwipeRefreshLayout(){
-        mSwipeRefreshLayout = (SwipeRefreshLayout)getActivity().findViewById(R.id.swiperefreshlayout);
-        mSwipeRefreshLayout.setColorSchemeColors(R.color.colorRed,R.color.colorGreen,R.color.colorBlue,R.color.colorRed);
+    private void initSwipeRefreshLayout() {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.swiperefreshlayout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorBlue, R.color.colorPrimaryDark,
+                R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
@@ -72,6 +74,8 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter = new RecyclerAdapter(mQueue));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
+                DividerItemDecoration.VERTICAL_LIST));
     }
 
     protected void initData() {
@@ -80,8 +84,8 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         requestData();
     }
 
-    private void requestData(){
-        StringRequest stringRequest = new StringRequest(Define.Url_PostList,this,this);
+    private void requestData() {
+        StringRequest stringRequest = new StringRequest(Define.Url_PostList, this, this);
         mQueue.add(stringRequest);
     }
 
@@ -90,17 +94,18 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
      */
     @Override
     public void onRefresh() {
-        if(!isSwipeRefreshing) {
+        if (!isSwipeRefreshing) {
             isSwipeRefreshing = true;
             requestData();
-            Log.i(TAG,"start refresh");
-        }else{
-            Log.i(TAG,"is refreshing...");
+            Log.i(TAG, "start refresh");
+        } else {
+            Log.i(TAG, "is refreshing...");
         }
     }
 
     /**
      * request ok.
+     *
      * @param response
      */
     @Override
@@ -108,20 +113,20 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         Log.i(TAG, response);
         Gson gson = new Gson();
         PostsCollection collection = gson.fromJson(response, PostsCollection.class);
-        if(!collection.getError().equals("")){
-            Log.i(TAG,"Response Error:"+collection.getError());
+        if (!collection.getError().equals("")) {
+            Log.i(TAG, "Response Error:" + collection.getError());
             return;
         }
         Log.i(TAG, "Count:" + collection.getCount());
         mAdapter.bindData(collection);
-        Log.i(TAG,"notify data changed");
+        Log.i(TAG, "notify data changed");
         mAdapter.notifyDataSetChanged();
 
-        if(progressDialog.isShowing()) {
-            Log.i(TAG,"ok progressdialog stop show");
+        if (progressDialog.isShowing()) {
+            Log.i(TAG, "ok progressdialog stop show");
             progressDialog.dismiss();
         }
-        if(mSwipeRefreshLayout.isRefreshing()) {
+        if (mSwipeRefreshLayout.isRefreshing()) {
             Log.i(TAG, "ok swiperefreshlayout stop refresh");
             mSwipeRefreshLayout.setRefreshing(false);
             isSwipeRefreshing = false;
@@ -130,24 +135,25 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     /**
      * request error.
+     *
      * @param error
      */
     @Override
     public void onErrorResponse(VolleyError error) {
-        if(error != null && error.getMessage() != null)
-            Log.i(TAG,error.getMessage());
+        if (error != null && error.getMessage() != null)
+            Log.i(TAG, error.getMessage());
         else
-            Log.i(TAG,"i don't know what happen.");
+            Log.i(TAG, "i don't know what happen.");
 
-        if(progressDialog.isShowing()) {
-            Log.i(TAG,"error progressdialog stop show");
+        if (progressDialog.isShowing()) {
+            Log.i(TAG, "error progressdialog stop show");
             progressDialog.dismiss();
         }
-        if(mSwipeRefreshLayout.isRefreshing()) {
+        if (mSwipeRefreshLayout.isRefreshing()) {
             Log.i(TAG, "error swiperefreshlayout stop refresh");
             mSwipeRefreshLayout.setRefreshing(false);
             isSwipeRefreshing = false;
         }
-        Toast.makeText(getActivity(),R.string.hint_refresh,Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), R.string.hint_refresh, Toast.LENGTH_LONG).show();
     }
 }

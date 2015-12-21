@@ -79,7 +79,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private void loadPicture(String url, final ImageView imageView) {
         Log.i(TAG, "load list pic");
 
-        final int defaultImageResId = 0;
         final int errorImageResId = 0;
         imageView.setTag(url);
         ImageLoader.ImageListener listener = new ImageLoader.ImageListener() {
@@ -89,16 +88,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                     String tag = (String)imageView.getTag();
                     if(tag.equals(response.getRequestUrl()))
                         imageView.setImageBitmap(response.getBitmap());
-                } else if (defaultImageResId != 0) {
-                    imageView.setImageResource(defaultImageResId);
                 }
             }
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (errorImageResId != 0) {
-                    imageView.setImageResource(errorImageResId);
-                }
+
             }
         };
          mImageLoader.get(url, listener, 600, 300);

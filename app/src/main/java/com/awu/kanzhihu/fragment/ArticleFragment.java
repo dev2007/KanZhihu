@@ -20,6 +20,7 @@ import com.android.volley.toolbox.Volley;
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.adapter.RecyclerAdapter;
 import com.awu.kanzhihu.entity.PostsCollection;
+import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.view.DividerItemDecoration;
 import com.google.gson.Gson;
@@ -72,7 +73,12 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         initData();
         mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(mAdapter = new RecyclerAdapter(mQueue));
+        mRecyclerView.setAdapter(mAdapter = new RecyclerAdapter(mQueue, new RecyclerViewClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(getActivity(),"测试点击",Toast.LENGTH_SHORT).show();
+            }
+        }));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL_LIST));
     }

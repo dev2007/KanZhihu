@@ -4,7 +4,7 @@
     <string name="section_article">热门文章</string>
     <string name="section_user">用户动态</string>
     <string name="section_setting">设置</string>
-    <string name="hint_refresh">网络异常，加载失败，请下拉重试</string>
+    <string name="hint_refresh">加载失败，请下拉刷新</string>
     <string name="text_recent">近日热门</string>
     <string name="text_yesterday">昨日最新</string>
     <string name="text_archive">历史精华</string>

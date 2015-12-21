@@ -1,5 +1,6 @@
 package com.awu.kanzhihu.adapter;
 
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.app.KZHApp;
 import com.awu.kanzhihu.entity.Post;
 import com.awu.kanzhihu.entity.PostsCollection;
+import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.BitmapCache;
 
 import java.util.ArrayList;
@@ -29,16 +31,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private RequestQueue mQueue;
     private ImageLoader mImageLoader;
 
+    private RecyclerViewClickListener mClickListener;
+
     public RecyclerAdapter(RequestQueue rQueue) {
         this.postList = new ArrayList<>();
         this.mQueue = rQueue;
         mImageLoader = new ImageLoader(mQueue, new BitmapCache());
     }
 
+    public RecyclerAdapter(RequestQueue rQueue,RecyclerViewClickListener clickListener){
+        this(rQueue);
+        this.mClickListener = clickListener;
+    }
+
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerViewHolder holder = new RecyclerViewHolder(
-                LayoutInflater.from(KZHApp.appContext()).inflate(R.layout.item_home, parent, false));
+                LayoutInflater.from(KZHApp.appContext()).inflate(R.layout.item_home, parent, false),mClickListener);
         return holder;
     }
 
@@ -79,7 +88,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private void loadPicture(String url, final ImageView imageView) {
         Log.i(TAG, "load list pic");
 
-        final int errorImageResId = 0;
         imageView.setTag(url);
         ImageLoader.ImageListener listener = new ImageLoader.ImageListener() {
             @Override
@@ -115,20 +123,42 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             postList = collection.getPosts();
     }
 
+    /**
+     * Set RecyclerView's click Listener.
+     * @param clickListener
+     */
+    public void setClickListener(RecyclerViewClickListener clickListener){
+        this.mClickListener = clickListener;
+    }
 
-    class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageViewPic;
-        TextView textViewDate;
-        TextView textViewName;
-        TextView textViewCount;
 
-        public RecyclerViewHolder(View view) {
+    class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private RecyclerViewClickListener mClickListener;
+        private ImageView imageViewPic;
+        private TextView textViewDate;
+        private TextView textViewName;
+        private TextView textViewCount;
+
+        public RecyclerViewHolder(View view,RecyclerViewClickListener clickListener) {
             super(view);
-
+            this.mClickListener = clickListener;
             imageViewPic = (ImageView) view.findViewById(R.id.iv_pic);
             textViewDate = (TextView) view.findViewById(R.id.tv_date);
             textViewName = (TextView) view.findViewById(R.id.tv_name);
             textViewCount = (TextView) view.findViewById(R.id.tv_count);
+            view.setOnClickListener(this);
+        }
+
+
+        /**
+         * Click event.
+         * @param v
+         */
+        @Override
+        public void onClick(View v) {
+            if(mClickListener != null){
+                mClickListener.onItemClick(v,getPosition());
+            }
         }
     }
 }

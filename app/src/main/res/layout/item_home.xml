@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_margin">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/activity_margin"
+    android:background="@drawable/item_selector">
 
     <ImageView
         android:id="@+id/iv_pic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/defaultpic"/>
-
 
     <TextView
         android:id="@+id/tv_date"
@@ -39,6 +39,4 @@
         android:text="33篇"
         android:textColor="@color/colorOrange"
         android:textSize="20sp" />
-
-
 </RelativeLayout>

@@ -64,8 +64,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void initSwipeRefreshLayout() {
         mSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.swiperefreshlayout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorBlue, R.color.colorPrimaryDark,
-                R.color.colorPrimary);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 

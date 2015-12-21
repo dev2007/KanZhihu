@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.util.Log;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.app.KZHApp;
@@ -65,7 +66,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }
         holder.textViewName.setText(name);
 
-        String countStr = String.format("%d%s",post.getCount(),KZHApp.appContext().getString(R.string.text_articlecount));
+        String countStr = String.format("%d%s", post.getCount(), KZHApp.appContext().getString(R.string.text_articlecount));
         holder.textViewCount.setText(countStr);
     }
 
@@ -75,10 +76,33 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
      * @param url
      * @param imageView
      */
-    private void loadPicture(String url, ImageView imageView) {
+    private void loadPicture(String url, final ImageView imageView) {
         Log.i(TAG, "load list pic");
-        ImageLoader.ImageListener listener = ImageLoader.getImageListener(imageView, 0, 0);
-        mImageLoader.get(url, listener, 600, 300);
+
+        final int defaultImageResId = 0;
+        final int errorImageResId = 0;
+        imageView.setTag(url);
+        ImageLoader.ImageListener listener = new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                if (response.getBitmap() != null) {
+                    String tag = (String)imageView.getTag();
+                    if(tag.equals(response.getRequestUrl()))
+                        imageView.setImageBitmap(response.getBitmap());
+                } else if (defaultImageResId != 0) {
+                    imageView.setImageResource(defaultImageResId);
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (errorImageResId != 0) {
+                    imageView.setImageResource(errorImageResId);
+                }
+            }
+        };
+         mImageLoader.get(url, listener, 600, 300);
+
     }
 
     @Override

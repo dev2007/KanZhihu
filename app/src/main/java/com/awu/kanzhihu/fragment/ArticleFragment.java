@@ -1,6 +1,7 @@
 package com.awu.kanzhihu.fragment;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -18,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.awu.kanzhihu.R;
+import com.awu.kanzhihu.activity.ArticleDetailActivity;
 import com.awu.kanzhihu.adapter.RecyclerAdapter;
 import com.awu.kanzhihu.entity.PostsCollection;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
@@ -36,15 +39,12 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ProgressDialog progressDialog;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
-    private PostsCollection mPostsCollection;
     private RecyclerAdapter mAdapter;
     private RequestQueue mQueue;
-    private boolean isSwipeRefreshing = false;
-
+    private
+    boolean isSwipeRefreshing = false;
     public ArticleFragment() {
-        mPostsCollection = new PostsCollection();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +56,9 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         super.onActivityCreated(savedInstanceState);
         initProgressDialog();
         initSwipeRefreshLayout();
+        initMQueue();
         initRecyclerView();
+        initData();
     }
 
     private void initProgressDialog() {
@@ -70,23 +72,36 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void initRecyclerView() {
-        initData();
         mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(mAdapter = new RecyclerAdapter(mQueue, new RecyclerViewClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Toast.makeText(getActivity(),"测试点击",Toast.LENGTH_SHORT).show();
-            }
-        }));
+
+        if(mAdapter == null){
+            mAdapter = new RecyclerAdapter(mQueue, new RecyclerViewClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    Toast.makeText(getActivity(), "测试点击" + position, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getActivity(), ArticleDetailActivity.class);
+                    intent.putExtra(Define.KEY_DATE, mAdapter.getPost(position).getDate());
+                    intent.putExtra(Define.KEY_NAME,mAdapter.getPost(position).getName());
+                    startActivity(intent);
+                }
+            });
+        }
+
+        mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL_LIST));
     }
 
-    protected void initData() {
-        progressDialog.show();
+    private void initMQueue(){
         mQueue = Volley.newRequestQueue(getActivity());
-        requestData();
+    }
+
+    protected void initData() {
+        if(mAdapter.getItemCount() == 0) {
+            progressDialog.show();
+            requestData();
+        }
     }
 
     private void requestData() {

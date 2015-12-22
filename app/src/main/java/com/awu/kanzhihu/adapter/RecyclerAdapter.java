@@ -18,6 +18,7 @@ import com.awu.kanzhihu.entity.Post;
 import com.awu.kanzhihu.entity.PostsCollection;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.BitmapCache;
+import com.awu.kanzhihu.util.Define;
 
 import java.util.ArrayList;
 
@@ -58,21 +59,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         loadPicture(post.getPic(), holder.imageViewPic);
         holder.textViewDate.setText(post.getDate());
 
-        String name = "";
-        switch (post.getName()) {
-            case "recent":
-                name = KZHApp.appContext().getString(R.string.text_recent);
-                break;
-            case "yesterday":
-                name = KZHApp.appContext().getString(R.string.text_yesterday);
-                break;
-            case "archive":
-                name = KZHApp.appContext().getString(R.string.text_archive);
-                break;
-            default:
-                name = "";
-
-        }
+        String name = Define.PostName.getDisplay(post.getName());
         holder.textViewName.setText(name);
 
         String countStr = String.format("%d%s", post.getCount(), KZHApp.appContext().getString(R.string.text_articlecount));
@@ -121,6 +108,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public void bindData(PostsCollection collection) {
         if (postList.size() == 0)
             postList = collection.getPosts();
+    }
+
+    /**
+     * get the post data by the position.
+     * @param position
+     * @return if get,return the post object,else return null.
+     */
+    public Post getPost(int position){
+        if(postList.size() != 0){
+            return postList.get(position);
+        }else{
+            return null;
+        }
     }
 
     /**

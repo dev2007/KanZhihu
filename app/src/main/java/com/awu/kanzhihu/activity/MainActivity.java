@@ -10,12 +10,13 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.util.Log;
 
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.adapter.SectionsPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     //fragmentpageradapter object.
     private SectionsPagerAdapter mSectionsPagerAdapter;
     // tablayout's viewpager.
@@ -25,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initToolbar();
         initTabWithAdapter();
         initFlotingActionButton();
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * initialize toolbar
      */
-    private void initToolbar(){
+    private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * initialize TabLayout & ViewPager & ViewPager's FragmentPagerAdapter
      */
-    private void initTabWithAdapter(){
+    private void initTabWithAdapter() {
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * initialize floating action button.
      */
-    private void initFlotingActionButton(){
+    private void initFlotingActionButton() {
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override

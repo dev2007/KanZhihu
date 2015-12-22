@@ -62,7 +62,7 @@ public class ArticleDetailActivity extends AppCompatActivity
             date = CommonUtil.convert8Date(disDate);
             name = intent.getStringExtra(Define.KEY_NAME);
             String disName = Define.PostName.getDisplay(name);
-            this.setTitle(disName + " " + date);
+            this.setTitle(disName + " " + disDate);
         } else {
             this.setTitle(getString(R.string.title_activity_article_detail));
         }

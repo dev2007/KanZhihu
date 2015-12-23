@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -35,6 +36,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         Response.ErrorListener {
     private static final String TAG = "ArticleDetailActivity";
     private Toolbar mToolbar;
+    private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private AnswerListAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -51,6 +53,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         initToolbar();
         setTitle(intent);
         initQueue();
+        initProgressBar();
         initFloatingActionButton();
         initSwipeRefreshLayout();
         initRecyclerView();
@@ -79,6 +82,10 @@ public class ArticleDetailActivity extends AppCompatActivity
         } else {
             this.setTitle(getString(R.string.title_activity_article_detail));
         }
+    }
+
+    private void initProgressBar(){
+        mProgressBar = (ProgressBar)findViewById(R.id.progressBar_detail);
     }
 
     /**
@@ -169,6 +176,12 @@ public class ArticleDetailActivity extends AppCompatActivity
 
     private void setNoRefresh() {
         Log.i(TAG, "stop refresh");
+
+        if(mSwipeRefreshLayout.getVisibility() == View.INVISIBLE){
+            mProgressBar.setVisibility(View.GONE);
+            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+        }
+
         if (mSwipeRefreshLayout.isRefreshing()) {
             isRefreshing = false;
             mSwipeRefreshLayout.setRefreshing(false);

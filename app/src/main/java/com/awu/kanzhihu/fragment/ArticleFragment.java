@@ -36,7 +36,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         Response.ErrorListener {
     private static final String TAG = "ArticleFragment";
 
-    private ProgressDialog progressDialog;
+    private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private RecyclerAdapter mAdapter;
@@ -54,15 +54,15 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initProgressDialog();
+        initProgressBar();
         initSwipeRefreshLayout();
         initMQueue();
         initRecyclerView();
         initData();
     }
 
-    private void initProgressDialog() {
-        progressDialog = new ProgressDialog(getActivity());
+    private void initProgressBar() {
+        mProgressBar = (ProgressBar)getActivity().findViewById(R.id.progressBar);
     }
 
     private void initSwipeRefreshLayout() {
@@ -79,7 +79,6 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
             mAdapter = new RecyclerAdapter(mQueue, new RecyclerViewClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    Toast.makeText(getActivity(), "测试点击" + position, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getActivity(), ArticleDetailActivity.class);
                     intent.putExtra(Define.KEY_DATE, mAdapter.getPost(position).getDate());
                     intent.putExtra(Define.KEY_NAME,mAdapter.getPost(position).getName());
@@ -99,8 +98,9 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     protected void initData() {
         if(mAdapter.getItemCount() == 0) {
-            progressDialog.show();
             requestData();
+        }else{
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 
@@ -156,17 +156,17 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
             Log.i(TAG, error.getMessage());
         else
             Log.i(TAG, "i don't know what happen.");
-        //TODO:test refresh to get data.
-        requestData();
-//        stopRefresh();
+        stopRefresh();
 
         Toast.makeText(getActivity(), R.string.hint_refresh, Toast.LENGTH_LONG).show();
     }
 
     private void stopRefresh(){
-        if (progressDialog.isShowing()) {
-            progressDialog.dismiss();
+        if(mSwipeRefreshLayout.getVisibility() == View.INVISIBLE){
+            mProgressBar.setVisibility(View.GONE);
+            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         }
+
         if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
             isSwipeRefreshing = false;

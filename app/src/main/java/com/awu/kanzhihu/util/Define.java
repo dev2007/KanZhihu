@@ -19,6 +19,11 @@ public class Define {
     public static final String Url_AnswerList = "http://api.kanzhihu.com/getpostanswers";
 
     /**
+     * url for get answer.
+     */
+    public static final String Url_Answer = "http://www.zhihu.com/question";
+
+    /**
      * Key for post date.
      */
     public static final String KEY_DATE = "postdate";
@@ -26,6 +31,16 @@ public class Define {
      * Key for post name.
      */
     public static final String KEY_NAME = "postname";
+
+    /**
+     * Key for question id.
+     */
+    public static final String KEY_QUESTIONID = "questionid";
+
+    /**
+     * Key for answer id.
+     */
+    public static final String KEY_ANSWERID = "answerid";
 
     public enum PostName{
         Yesterday("yesterday", KZHApp.appContext().getString(R.string.text_yesterday)),

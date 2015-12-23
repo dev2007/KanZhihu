@@ -24,6 +24,10 @@
         <activity
             android:name=".activity.ArticleDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.AnswerActivity"
+            android:label="@string/title_activity_answer"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

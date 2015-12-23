@@ -20,6 +20,7 @@ import com.android.volley.toolbox.Volley;
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.adapter.AnswerListAdapter;
 import com.awu.kanzhihu.adapter.RecyclerAdapter;
+import com.awu.kanzhihu.entity.Answer;
 import com.awu.kanzhihu.entity.AnswerCollection;
 import com.awu.kanzhihu.entity.PostsCollection;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
@@ -119,6 +120,12 @@ public class ArticleDetailActivity extends AppCompatActivity
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(getApplicationContext(), "点击明细" + position, Toast.LENGTH_SHORT).show();
+                Answer answer = mAdapter.getAnswer(position);
+                if(answer == null)return;
+                Intent intent = new Intent(getApplicationContext(),AnswerActivity.class);
+                intent.putExtra(Define.KEY_QUESTIONID,answer.getQuestionid());
+                intent.putExtra(Define.KEY_ANSWERID,answer.getAnswerid());
+                startActivity(intent);
             }
         });
         mRecyclerView.setAdapter(mAdapter);

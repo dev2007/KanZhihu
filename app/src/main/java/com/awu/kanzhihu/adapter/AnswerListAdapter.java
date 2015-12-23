@@ -48,6 +48,20 @@ public class AnswerListAdapter extends RecyclerView.Adapter<AnswerListAdapter.An
         }
     }
 
+    /**
+     * get answer by position.
+     * @param position
+     * @return
+     */
+    public Answer getAnswer(int position){
+        if(answerList.size() != 0){
+            return answerList.get(position);
+        }else {
+
+            return null;
+        }
+    }
+
     @Override
     public AnswerListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         AnswerListHolder holder = new AnswerListHolder(

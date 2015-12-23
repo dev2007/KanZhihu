@@ -22,6 +22,7 @@ import com.android.volley.toolbox.Volley;
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.activity.ArticleDetailActivity;
 import com.awu.kanzhihu.adapter.RecyclerAdapter;
+import com.awu.kanzhihu.entity.Post;
 import com.awu.kanzhihu.entity.PostsCollection;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.Define;
@@ -43,6 +44,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private RequestQueue mQueue;
     private
     boolean isSwipeRefreshing = false;
+
     public ArticleFragment() {
     }
 
@@ -62,7 +64,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void initProgressBar() {
-        mProgressBar = (ProgressBar)getActivity().findViewById(R.id.progressBar);
+        mProgressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
     }
 
     private void initSwipeRefreshLayout() {
@@ -75,13 +77,15 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        if(mAdapter == null){
+        if (mAdapter == null) {
             mAdapter = new RecyclerAdapter(mQueue, new RecyclerViewClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     Intent intent = new Intent(getActivity(), ArticleDetailActivity.class);
-                    intent.putExtra(Define.KEY_DATE, mAdapter.getPost(position).getDate());
-                    intent.putExtra(Define.KEY_NAME,mAdapter.getPost(position).getName());
+                    Post post = mAdapter.getPost(position);
+                    if (post == null) return;
+                    intent.putExtra(Define.KEY_DATE, post.getDate());
+                    intent.putExtra(Define.KEY_NAME, post.getName());
                     startActivity(intent);
                 }
             });
@@ -92,14 +96,14 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 DividerItemDecoration.VERTICAL_LIST));
     }
 
-    private void initMQueue(){
+    private void initMQueue() {
         mQueue = Volley.newRequestQueue(getActivity());
     }
 
     protected void initData() {
-        if(mAdapter.getItemCount() == 0) {
+        if (mAdapter.getItemCount() == 0) {
             requestData();
-        }else{
+        } else {
             mProgressBar.setVisibility(View.GONE);
         }
     }
@@ -161,8 +165,8 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         Toast.makeText(getActivity(), R.string.hint_refresh, Toast.LENGTH_LONG).show();
     }
 
-    private void stopRefresh(){
-        if(mSwipeRefreshLayout.getVisibility() == View.INVISIBLE){
+    private void stopRefresh() {
+        if (mSwipeRefreshLayout.getVisibility() == View.INVISIBLE) {
             mProgressBar.setVisibility(View.GONE);
             mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         }

@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -14,8 +17,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.awu.kanzhihu.R;
+import com.awu.kanzhihu.adapter.RecyclerAdapter;
+import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.CommonUtil;
 import com.awu.kanzhihu.util.Define;
+import com.awu.kanzhihu.view.DividerItemDecoration;
 
 import java.util.Date;
 
@@ -25,6 +31,8 @@ public class ArticleDetailActivity extends AppCompatActivity
         Response.ErrorListener {
     private static final String TAG = "ArticleDetailActivity";
     private Toolbar mToolbar;
+    private RecyclerView mRecyclerView;
+    private RecyclerAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private boolean isRefreshing = false;
     private RequestQueue mQueue;
@@ -94,7 +102,18 @@ public class ArticleDetailActivity extends AppCompatActivity
     }
 
     private void initRecyclerView() {
-
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_detail);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //TODO:for test view is useful.
+        mAdapter = new RecyclerAdapter(mQueue, new RecyclerViewClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(getApplicationContext(), "点击明细" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.VERTICAL_LIST));
     }
 
     /**
@@ -105,7 +124,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         if (!isRefreshing) {
             isRefreshing = true;
             Log.e(TAG, "refresh");
-            Log.e(TAG,"is refresh?" + mSwipeRefreshLayout.isRefreshing());
+            Log.e(TAG, "is refresh?" + mSwipeRefreshLayout.isRefreshing());
 //            requestData(date,name);
         } else {
             Log.e(TAG, "is refreshing...");
@@ -114,7 +133,8 @@ public class ArticleDetailActivity extends AppCompatActivity
 
     private void requestData(String publishTime, String name) {
         String url = String.format("%s/%s/%s", Define.Url_AnswerList, publishTime, name);
-        Log.i(TAG,url);
+        url = Define.Url_PostList;
+        Log.i(TAG, url);
         StringRequest stringRequest = new StringRequest(url, this, this);
         mQueue.add(stringRequest);
     }
@@ -136,9 +156,9 @@ public class ArticleDetailActivity extends AppCompatActivity
         setNoRefresh();
     }
 
-    private void setNoRefresh(){
-        Log.i(TAG,"stop refresh");
-        if(mSwipeRefreshLayout.isRefreshing()) {
+    private void setNoRefresh() {
+        Log.i(TAG, "stop refresh");
+        if (mSwipeRefreshLayout.isRefreshing()) {
             isRefreshing = false;
             mSwipeRefreshLayout.setRefreshing(false);
         }

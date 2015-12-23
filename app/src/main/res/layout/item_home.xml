@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="@dimen/activity_margin"
-    android:background="@drawable/item_selector">
+    android:background="@android:drawable/list_selector_background">
 
     <ImageView
         android:id="@+id/iv_pic"

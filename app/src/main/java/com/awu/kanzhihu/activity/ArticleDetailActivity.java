@@ -17,11 +17,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.awu.kanzhihu.R;
+import com.awu.kanzhihu.adapter.AnswerListAdapter;
 import com.awu.kanzhihu.adapter.RecyclerAdapter;
+import com.awu.kanzhihu.entity.AnswerCollection;
+import com.awu.kanzhihu.entity.PostsCollection;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.CommonUtil;
 import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.view.DividerItemDecoration;
+import com.google.gson.Gson;
 
 import java.util.Date;
 
@@ -32,7 +36,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     private static final String TAG = "ArticleDetailActivity";
     private Toolbar mToolbar;
     private RecyclerView mRecyclerView;
-    private RecyclerAdapter mAdapter;
+    private AnswerListAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private boolean isRefreshing = false;
     private RequestQueue mQueue;
@@ -50,6 +54,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         initFloatingActionButton();
         initSwipeRefreshLayout();
         initRecyclerView();
+        requestData(date, name);
     }
 
     private void initToolbar() {
@@ -98,14 +103,12 @@ public class ArticleDetailActivity extends AppCompatActivity
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefreshlayout_detail);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     private void initRecyclerView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_detail);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //TODO:for test view is useful.
-        mAdapter = new RecyclerAdapter(mQueue, new RecyclerViewClickListener() {
+        mAdapter = new AnswerListAdapter(mQueue, new RecyclerViewClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(getApplicationContext(), "点击明细" + position, Toast.LENGTH_SHORT).show();
@@ -124,8 +127,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         if (!isRefreshing) {
             isRefreshing = true;
             Log.e(TAG, "refresh");
-            Log.e(TAG, "is refresh?" + mSwipeRefreshLayout.isRefreshing());
-//            requestData(date,name);
+            requestData(date, name);
         } else {
             Log.e(TAG, "is refreshing...");
         }
@@ -133,7 +135,6 @@ public class ArticleDetailActivity extends AppCompatActivity
 
     private void requestData(String publishTime, String name) {
         String url = String.format("%s/%s/%s", Define.Url_AnswerList, publishTime, name);
-        url = Define.Url_PostList;
         Log.i(TAG, url);
         StringRequest stringRequest = new StringRequest(url, this, this);
         mQueue.add(stringRequest);
@@ -142,7 +143,17 @@ public class ArticleDetailActivity extends AppCompatActivity
     @Override
     public void onResponse(String response) {
         Log.i(TAG, response);
-
+        Log.i(TAG, response);
+        Gson gson = new Gson();
+        AnswerCollection collection = gson.fromJson(response, AnswerCollection.class);
+        if (!collection.getError().equals("")) {
+            Log.i(TAG, "Response Error:" + collection.getError());
+            return;
+        }
+        Log.i(TAG, "Count:" + collection.getCount());
+        mAdapter.bindData(collection);
+        Log.i(TAG, "notify data changed");
+        mAdapter.notifyDataSetChanged();
         setNoRefresh();
     }
 

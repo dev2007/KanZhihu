@@ -142,15 +142,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         Log.i(TAG, "notify data changed");
         mAdapter.notifyDataSetChanged();
 
-        if (progressDialog.isShowing()) {
-            Log.i(TAG, "ok progressdialog stop show");
-            progressDialog.dismiss();
-        }
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            Log.i(TAG, "ok swiperefreshlayout stop refresh");
-            mSwipeRefreshLayout.setRefreshing(false);
-            isSwipeRefreshing = false;
-        }
+        stopRefresh();
     }
 
     /**
@@ -164,16 +156,20 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
             Log.i(TAG, error.getMessage());
         else
             Log.i(TAG, "i don't know what happen.");
+        //TODO:test refresh to get data.
+        requestData();
+//        stopRefresh();
 
+        Toast.makeText(getActivity(), R.string.hint_refresh, Toast.LENGTH_LONG).show();
+    }
+
+    private void stopRefresh(){
         if (progressDialog.isShowing()) {
-            Log.i(TAG, "error progressdialog stop show");
             progressDialog.dismiss();
         }
         if (mSwipeRefreshLayout.isRefreshing()) {
-            Log.i(TAG, "error swiperefreshlayout stop refresh");
             mSwipeRefreshLayout.setRefreshing(false);
             isSwipeRefreshing = false;
         }
-        Toast.makeText(getActivity(), R.string.hint_refresh, Toast.LENGTH_LONG).show();
     }
 }

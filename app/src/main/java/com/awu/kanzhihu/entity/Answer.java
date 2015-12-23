@@ -13,7 +13,7 @@ public class Answer {
     /**
      * publish time.
      */
-    private Date time;
+    private String time;
     /**
      * answer summary.
      */
@@ -51,11 +51,11 @@ public class Answer {
         this.title = title;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

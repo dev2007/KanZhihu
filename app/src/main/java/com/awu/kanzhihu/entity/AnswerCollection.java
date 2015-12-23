@@ -7,6 +7,10 @@ import java.util.ArrayList;
  */
 public class AnswerCollection {
     /**
+     * error message.
+     */
+    private String error;
+    /**
      * answers' count.
      */
     private int count;
@@ -33,5 +37,13 @@ public class AnswerCollection {
 
     public void setAnswers(ArrayList<Answer> answers) {
         this.answers = answers;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }

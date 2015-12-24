@@ -119,7 +119,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         mAdapter = new AnswerListAdapter(mQueue, new RecyclerViewClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(getApplicationContext(), "点击明细" + position, Toast.LENGTH_SHORT).show();
                 Answer answer = mAdapter.getAnswer(position);
                 if(answer == null)return;
                 Intent intent = new Intent(getApplicationContext(),AnswerActivity.class);

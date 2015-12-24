@@ -42,8 +42,10 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private RecyclerView mRecyclerView;
     private RecyclerAdapter mAdapter;
     private RequestQueue mQueue;
-    private
-    boolean isSwipeRefreshing = false;
+    private boolean isSwipeRefreshing = false;
+    private int latestPublishTime = 0;
+    private int oldestPublishTime = 0;
+    private boolean loadNew = true;
 
     public ArticleFragment() {
     }
@@ -56,12 +58,25 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null){
+            latestPublishTime = savedInstanceState.getInt(Define.KEY_PUBLISH_TIME);
+            oldestPublishTime = savedInstanceState.getInt(Define.KEY_OLD_PUBLISH_TIME);
+        }
         initProgressBar();
         initSwipeRefreshLayout();
         initMQueue();
         initRecyclerView();
         initData();
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        if(savedInstanceState != null) {
+            savedInstanceState.putInt(Define.KEY_PUBLISH_TIME, latestPublishTime);
+            savedInstanceState.putInt(Define.KEY_OLD_PUBLISH_TIME,oldestPublishTime);
+        }
+    }
+
 
     private void initProgressBar() {
         mProgressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
@@ -108,6 +123,30 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
+    private void requestCheckNew(){
+        String url = String.format("%s/%d",Define.Url_CheckNew,latestPublishTime);
+        StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>(){
+
+            @Override
+            public void onResponse(String response) {
+                if(response.contains("true")){
+                    loadNew = true;
+                    requestData();
+                }else{
+                    Toast.makeText(getActivity(), R.string.hint_nonew, Toast.LENGTH_LONG).show();
+                    stopRefresh();
+                }
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(), R.string.hint_refresh, Toast.LENGTH_LONG).show();
+                stopRefresh();
+            }
+        });
+        mQueue.add(stringRequest);
+    }
+
     private void requestData() {
         StringRequest stringRequest = new StringRequest(Define.Url_PostList, this, this);
         mQueue.add(stringRequest);
@@ -120,7 +159,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onRefresh() {
         if (!isSwipeRefreshing) {
             isSwipeRefreshing = true;
-            requestData();
+            requestCheckNew();
             Log.i(TAG, "start refresh");
         } else {
             Log.i(TAG, "is refreshing...");
@@ -145,8 +184,24 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mAdapter.bindData(collection);
         Log.i(TAG, "notify data changed");
         mAdapter.notifyDataSetChanged();
-
+        getTimeStamp(collection);
         stopRefresh();
+    }
+
+    /**
+     * get latest publish-time & oldest publish-time for old update.
+     * @param collection
+     */
+    private void getTimeStamp(PostsCollection collection){
+        Log.i(TAG,"bind time stamp");
+        if(loadNew) {
+            Log.i(TAG,"bind latest publish time");
+            Post latestPost = collection.getPosts().get(0);
+            latestPublishTime = latestPost.getPublishtime();
+            loadNew = false;
+        }
+        Post oldestPost = collection.getPosts().get(collection.getCount() - 1);
+        oldestPublishTime = oldestPost.getPublishtime();
     }
 
     /**
@@ -161,7 +216,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         else
             Log.i(TAG, "i don't know what happen.");
         stopRefresh();
-
+        loadNew = false;
         Toast.makeText(getActivity(), R.string.hint_refresh, Toast.LENGTH_LONG).show();
     }
 

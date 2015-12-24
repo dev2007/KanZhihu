@@ -24,6 +24,11 @@ public class Define {
     public static final String Url_Answer = "http://www.zhihu.com/question";
 
     /**
+     * url for check new post.
+     */
+    public static final String Url_CheckNew = "http://api.kanzhihu.com/checknew";
+
+    /**
      * Key for post date.
      */
     public static final String KEY_DATE = "postdate";
@@ -46,6 +51,16 @@ public class Define {
      * Key for answer title.
      */
     public static final String KEY_ANSWER_TITLE = "answertitle";
+
+    /**
+     * Key for publish time.
+     */
+    public static final String KEY_PUBLISH_TIME ="publishtime";
+
+    /**
+     * Key for old publish time.
+     */
+    public static final String KEY_OLD_PUBLISH_TIME = "oldpublishtime";
 
     public enum PostName{
         Yesterday("yesterday", KZHApp.appContext().getString(R.string.text_yesterday)),

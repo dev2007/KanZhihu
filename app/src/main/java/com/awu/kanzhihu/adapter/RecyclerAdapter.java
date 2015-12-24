@@ -73,8 +73,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
      * @param imageView
      */
     private void loadPicture(String url, final ImageView imageView) {
-        Log.i(TAG, "load list pic");
-
         imageView.setTag(url);
         ImageLoader.ImageListener listener = new ImageLoader.ImageListener() {
             @Override

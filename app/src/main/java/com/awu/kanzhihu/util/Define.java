@@ -42,6 +42,11 @@ public class Define {
      */
     public static final String KEY_ANSWERID = "answerid";
 
+    /**
+     * Key for answer title.
+     */
+    public static final String KEY_ANSWER_TITLE = "answertitle";
+
     public enum PostName{
         Yesterday("yesterday", KZHApp.appContext().getString(R.string.text_yesterday)),
         Recent("recent",KZHApp.appContext().getString(R.string.text_recent)),

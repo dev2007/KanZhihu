@@ -29,10 +29,12 @@ public class AnswerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer);
+        Intent intent = getIntent();
         initToolbar();
+        setTitle(intent);
         initFlotingActionButton();
         initProgressBar();
-        initWebView();
+        initWebView(intent);
     }
 
     private void initToolbar() {
@@ -45,6 +47,13 @@ public class AnswerActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+    private void setTitle(Intent intent){
+        if(intent != null){
+            mAnswerTitle = intent.getStringExtra(Define.KEY_ANSWER_TITLE);
+            getSupportActionBar().setTitle(mAnswerTitle);
+        }
     }
 
     private void initProgressBar() {
@@ -62,35 +71,34 @@ public class AnswerActivity extends AppCompatActivity {
 //        });
     }
 
-    private void initWebView() {
+    private void initWebView(Intent intent) {
         mWebView = (WebView) findViewById(R.id.wv);
         WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
 
-        Intent intent = getIntent();
         if (intent != null) {
             String questionId = intent.getStringExtra(Define.KEY_QUESTIONID);
             String answerId = intent.getStringExtra(Define.KEY_ANSWERID);
             mUrl = String.format("%s/%s/answer/%s", Define.Url_Answer, questionId, answerId);
             Log.i(TAG, mUrl);
             mWebView.loadUrl(mUrl);
-            mWebView.setWebChromeClient(new WebChromeClient() {
+            mWebView.setWebViewClient(new WebViewClient() {
                 @Override
-                public void onReceivedTitle(WebView view, String title) {
-                    super.onReceivedTitle(view, title);
-                    Log.i(TAG, "title is " + title);
-                    mAnswerTitle = title;
+                public boolean shouldOverrideUrlLoading(WebView view,String url){
+                    view.loadUrl(url);
+                    return true;
                 }
+            });
 
+            mWebView.setWebChromeClient(new WebChromeClient() {
                 @Override
                 public void onProgressChanged(WebView view, int newProgress) {
                     if (newProgress == 100) {
+                        Log.i(TAG, "url load ok");
                         if (mProgressBar.getVisibility() == View.VISIBLE) {
                             mProgressBar.setVisibility(View.GONE);
                             mWebView.setVisibility(View.VISIBLE);
                         }
-                    }else{
-                        Log.i(TAG,"progress is:"+newProgress);
                     }
                 }
             });

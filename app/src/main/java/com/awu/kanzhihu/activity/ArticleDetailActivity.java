@@ -79,9 +79,9 @@ public class ArticleDetailActivity extends AppCompatActivity
             date = CommonUtil.convert8Date(disDate);
             name = intent.getStringExtra(Define.KEY_NAME);
             String disName = Define.PostName.getDisplay(name);
-            this.setTitle(disName + " " + disDate);
+            getSupportActionBar().setTitle(disName + " " + disDate);
         } else {
-            this.setTitle(getString(R.string.title_activity_article_detail));
+            getSupportActionBar().setTitle(getString(R.string.title_activity_article_detail));
         }
     }
 
@@ -124,6 +124,7 @@ public class ArticleDetailActivity extends AppCompatActivity
                 Intent intent = new Intent(getApplicationContext(),AnswerActivity.class);
                 intent.putExtra(Define.KEY_QUESTIONID,answer.getQuestionid());
                 intent.putExtra(Define.KEY_ANSWERID,answer.getAnswerid());
+                intent.putExtra(Define.KEY_ANSWER_TITLE,answer.getTitle());
                 startActivity(intent);
             }
         });
@@ -176,7 +177,7 @@ public class ArticleDetailActivity extends AppCompatActivity
             Log.i(TAG, error.getMessage());
         else
             Log.i(TAG, "i don't know what happen.");
-
+        Toast.makeText(this, R.string.hint_refresh, Toast.LENGTH_LONG).show();
         setNoRefresh();
     }
 

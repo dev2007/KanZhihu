@@ -41,6 +41,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private RecyclerAdapter mAdapter;
+    private LinearLayoutManager mLinearLayoutManager;
     private RequestQueue mQueue;
     private boolean isSwipeRefreshing = false;
     private int latestPublishTime = 0;
@@ -58,7 +59,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             latestPublishTime = savedInstanceState.getInt(Define.KEY_PUBLISH_TIME);
             oldestPublishTime = savedInstanceState.getInt(Define.KEY_OLD_PUBLISH_TIME);
         }
@@ -70,10 +71,10 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState){
-        if(savedInstanceState != null) {
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
             savedInstanceState.putInt(Define.KEY_PUBLISH_TIME, latestPublishTime);
-            savedInstanceState.putInt(Define.KEY_OLD_PUBLISH_TIME,oldestPublishTime);
+            savedInstanceState.putInt(Define.KEY_OLD_PUBLISH_TIME, oldestPublishTime);
         }
     }
 
@@ -90,7 +91,20 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void initRecyclerView() {
         mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerview);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE
+                        && mLinearLayoutManager.findLastVisibleItemPosition() + 1
+                        == mAdapter.getItemCount()) {
+                    requestOldData();
+                }
+            }
+        });
+
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         if (mAdapter == null) {
             mAdapter = new RecyclerAdapter(mQueue, new RecyclerViewClickListener() {
@@ -123,21 +137,21 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
-    private void requestCheckNew(){
-        String url = String.format("%s/%d",Define.Url_CheckNew,latestPublishTime);
-        StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>(){
+    private void requestCheckNew() {
+        String url = String.format("%s/%d", Define.Url_CheckNew, latestPublishTime);
+        StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                if(response.contains("true")){
+                if (response.contains("true")) {
                     loadNew = true;
                     requestData();
-                }else{
+                } else {
                     Toast.makeText(getActivity(), R.string.hint_nonew, Toast.LENGTH_LONG).show();
                     stopRefresh();
                 }
             }
-        }, new Response.ErrorListener(){
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getActivity(), R.string.hint_refresh, Toast.LENGTH_LONG).show();
@@ -149,6 +163,36 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void requestData() {
         StringRequest stringRequest = new StringRequest(Define.Url_PostList, this, this);
+        mQueue.add(stringRequest);
+    }
+
+    private void requestOldData() {
+        String url = String.format("%s/%d", Define.Url_PostList, oldestPublishTime);
+        StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                PostsCollection collection = gson.fromJson(response, PostsCollection.class);
+                if (!collection.getError().equals("")) {
+                    Log.i(TAG, "Push Response Error:" + collection.getError());
+                    return;
+                }
+                mAdapter.bindData(collection, false);
+                mAdapter.notifyDataSetChanged();
+                getTimeStamp(collection);
+                stopRefresh();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error != null && error.getMessage() != null)
+                    Log.i(TAG, "push:" + error.getMessage());
+                else
+                    Log.i(TAG, "push:i don't know what happen.");
+                stopRefresh();
+                Toast.makeText(getActivity(), R.string.hint_pushrefresh, Toast.LENGTH_SHORT).show();
+            }
+        });
         mQueue.add(stringRequest);
     }
 
@@ -173,7 +217,6 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
      */
     @Override
     public void onResponse(String response) {
-        Log.i(TAG, response);
         Gson gson = new Gson();
         PostsCollection collection = gson.fromJson(response, PostsCollection.class);
         if (!collection.getError().equals("")) {
@@ -181,7 +224,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
             return;
         }
         Log.i(TAG, "Count:" + collection.getCount());
-        mAdapter.bindData(collection);
+        mAdapter.bindData(collection, true);
         Log.i(TAG, "notify data changed");
         mAdapter.notifyDataSetChanged();
         getTimeStamp(collection);
@@ -190,12 +233,13 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     /**
      * get latest publish-time & oldest publish-time for old update.
+     *
      * @param collection
      */
-    private void getTimeStamp(PostsCollection collection){
-        Log.i(TAG,"bind time stamp");
-        if(loadNew) {
-            Log.i(TAG,"bind latest publish time");
+    private void getTimeStamp(PostsCollection collection) {
+        Log.i(TAG, "bind time stamp");
+        if (loadNew) {
+            Log.i(TAG, "bind latest publish time");
             Post latestPost = collection.getPosts().get(0);
             latestPublishTime = latestPost.getPublishtime();
             loadNew = false;

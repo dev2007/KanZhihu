@@ -1,6 +1,5 @@
 package com.awu.kanzhihu.adapter;
 
-import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 /**
  * Created by awu on 2015-12-17.
  */
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder> {
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "RecyclerAdapter";
 
     private ArrayList<Post> postList;
@@ -34,36 +33,57 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     private RecyclerViewClickListener mClickListener;
 
+    private final int TYPE_ITEM = 0;
+    private final int TYPE_FOOTER = 1;
+
     public RecyclerAdapter(RequestQueue rQueue) {
         this.postList = new ArrayList<>();
         this.mQueue = rQueue;
         mImageLoader = new ImageLoader(mQueue, new BitmapCache());
     }
 
-    public RecyclerAdapter(RequestQueue rQueue,RecyclerViewClickListener clickListener){
+    public RecyclerAdapter(RequestQueue rQueue, RecyclerViewClickListener clickListener) {
         this(rQueue);
         this.mClickListener = clickListener;
     }
 
     @Override
-    public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecyclerViewHolder holder = new RecyclerViewHolder(
-                LayoutInflater.from(KZHApp.appContext()).inflate(R.layout.item_home, parent, false),mClickListener);
-        return holder;
+    public int getItemViewType(int position) {
+        if (position + 1 == getItemCount()) {
+            return TYPE_FOOTER;
+        } else {
+            return TYPE_ITEM;
+        }
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-        Post post = postList.get(position);
-        Log.i(TAG, "load row,date:" + post.getDate() + " name:" + post.getName() + " position:" + position);
-        loadPicture(post.getPic(), holder.imageViewPic);
-        holder.textViewDate.setText(post.getDate());
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE_FOOTER) {
+            FooterViewHolder holder = new FooterViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.footerview, parent, false));
+            return holder;
+        } else {
+            RecyclerViewHolder holder = new RecyclerViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home, parent, false), mClickListener);
+            return holder;
+        }
+    }
 
-        String name = Define.PostName.getDisplay(post.getName());
-        holder.textViewName.setText(name);
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof RecyclerViewHolder) {
+            RecyclerViewHolder viewHolder = ((RecyclerViewHolder) holder);
+            Post post = postList.get(position);
+            Log.i(TAG, "load row,date:" + post.getDate() + " name:" + post.getName() + " position:" + position);
+            loadPicture(post.getPic(), viewHolder.imageViewPic);
+            viewHolder.textViewDate.setText(post.getDate());
 
-        String countStr = String.format("%d%s", post.getCount(), KZHApp.appContext().getString(R.string.text_articlecount));
-        holder.textViewCount.setText(countStr);
+            String name = Define.PostName.getDisplay(post.getName());
+            viewHolder.textViewName.setText(name);
+
+            String countStr = String.format("%d%s", post.getCount(), KZHApp.appContext().getString(R.string.text_articlecount));
+            viewHolder.textViewCount.setText(countStr);
+        }
     }
 
     /**
@@ -78,8 +98,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                 if (response.getBitmap() != null) {
-                    String tag = (String)imageView.getTag();
-                    if(tag.equals(response.getRequestUrl()))
+                    String tag = (String) imageView.getTag();
+                    if (tag.equals(response.getRequestUrl()))
                         imageView.setImageBitmap(response.getBitmap());
                 }
             }
@@ -89,7 +109,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
             }
         };
-         mImageLoader.get(url, listener, 600, 300);
+        mImageLoader.get(url, listener, 600, 300);
 
     }
 
@@ -102,30 +122,61 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
      * attach data with adapter.
      *
      * @param collection
+     * @param isNew      true,the new data.
      */
-    public void bindData(PostsCollection collection) {
-        if (postList.size() == 0)
-            postList = collection.getPosts();
+    public void bindData(PostsCollection collection, boolean isNew) {
+        if (isNew) {
+            if (postList.size() == 0)
+                postList = collection.getPosts();
+            else {
+                append(postList, collection.getPosts(), false);
+            }
+        } else {
+            append(postList, collection.getPosts(), true);
+        }
+    }
+
+    /**
+     * merge data.
+     *
+     * @param sourceList  first list.
+     * @param otherList   other list.
+     * @param appendToEnd true,append other list to first list.false,append other list to the first list head.
+     */
+    private void append(ArrayList<Post> sourceList, ArrayList<Post> otherList, boolean appendToEnd) {
+        //if append to end
+        if (appendToEnd) {
+            for (Post post : otherList) {
+                sourceList.add(post);
+            }
+        } else {
+            for (Post post : sourceList) {
+                otherList.add(post);
+            }
+            sourceList = otherList;
+        }
     }
 
     /**
      * get the post data by the position.
+     *
      * @param position
      * @return if get,return the post object,else return null.
      */
-    public Post getPost(int position){
-        if(postList.size() != 0){
+    public Post getPost(int position) {
+        if (postList.size() != 0) {
             return postList.get(position);
-        }else{
+        } else {
             return null;
         }
     }
 
     /**
      * Set RecyclerView's click Listener.
+     *
      * @param clickListener
      */
-    public void setClickListener(RecyclerViewClickListener clickListener){
+    public void setClickListener(RecyclerViewClickListener clickListener) {
         this.mClickListener = clickListener;
     }
 
@@ -137,7 +188,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         private TextView textViewName;
         private TextView textViewCount;
 
-        public RecyclerViewHolder(View view,RecyclerViewClickListener clickListener) {
+        public RecyclerViewHolder(View view, RecyclerViewClickListener clickListener) {
             super(view);
             this.mClickListener = clickListener;
             imageViewPic = (ImageView) view.findViewById(R.id.iv_pic);
@@ -150,13 +201,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
         /**
          * Click event.
+         *
          * @param v
          */
         @Override
         public void onClick(View v) {
-            if(mClickListener != null){
-                mClickListener.onItemClick(v,getPosition());
+            if (mClickListener != null) {
+                mClickListener.onItemClick(v, getPosition());
             }
         }
     }
+
+    class FooterViewHolder extends RecyclerView.ViewHolder {
+
+        public FooterViewHolder(View view) {
+            super(view);
+        }
+
+    }
+
 }

@@ -3,6 +3,7 @@ package com.awu.kanzhihu.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.app.KZHApp;
@@ -15,6 +16,8 @@ import com.awu.kanzhihu.fragment.UserFragment;
  * one of the sections/tabs/pages.
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    private static final String TAG = "SectionPagerAdataper";
+
     private ArticleFragment articleFragment;
     private UserFragment userFragment;
     private SettingFragment settingFragment;

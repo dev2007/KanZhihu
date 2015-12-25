@@ -53,12 +53,14 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i(TAG, "create view");
         return inflater.inflate(R.layout.fragment_article, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.i(TAG, "activity created");
         if (savedInstanceState != null) {
             latestPublishTime = savedInstanceState.getInt(Define.KEY_PUBLISH_TIME);
             oldestPublishTime = savedInstanceState.getInt(Define.KEY_OLD_PUBLISH_TIME);
@@ -131,9 +133,11 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     protected void initData() {
         if (mAdapter.getItemCount() == 0) {
+            Log.i(TAG, "first request data");
             requestData();
         } else {
             mProgressBar.setVisibility(View.GONE);
+            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         }
     }
 

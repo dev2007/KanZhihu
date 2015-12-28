@@ -13,6 +13,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -59,11 +60,10 @@ public class ArticleDetailActivity extends AppCompatActivity
         setTitle(intent);
         initQueue();
         initProgressBar();
-        initFloatingActionButton();
         initSwipeRefreshLayout();
         initRecyclerView();
         requestData(date, name);
-        ((CoordinatorLayout) findViewById(R.id.wrap)).setOnTouchListener(this);
+//        ((CoordinatorLayout) findViewById(R.id.wrap)).setOnTouchListener(this);
     }
 
     private void initToolbar() {
@@ -107,17 +107,6 @@ public class ArticleDetailActivity extends AppCompatActivity
         mQueue = Volley.newRequestQueue(this);
     }
 
-    private void initFloatingActionButton() {
-        //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-    }
-
     private void initSwipeRefreshLayout() {
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefreshlayout_detail);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary);
@@ -132,23 +121,31 @@ public class ArticleDetailActivity extends AppCompatActivity
             @Override
             public void onItemClick(View view, int position) {
                 Answer answer = mAdapter.getAnswer(position);
-                if (answer == null) return;
-                Intent intent = new Intent(getApplicationContext(), AnswerActivity.class);
-                intent.putExtra(Define.KEY_QUESTIONID, answer.getQuestionid());
-                intent.putExtra(Define.KEY_ANSWERID, answer.getAnswerid());
-                intent.putExtra(Define.KEY_ANSWER_TITLE, answer.getTitle());
-                startActivity(intent);
+                if (view instanceof ImageView) {
+                    Intent intent = new Intent(getApplicationContext(), UserActivity.class);
+                    intent.putExtra(Define.KEY_USER_HASH, answer.getAuthorhash());
+                    intent.putExtra(Define.KEY_USER_AVATAR,answer.getAvatar());
+                    intent.putExtra(Define.KEY_USER_NAME,answer.getAuthorname());
+                    startActivity(intent);
+                } else {
+                    if (answer == null) return;
+                    Intent intent = new Intent(getApplicationContext(), AnswerActivity.class);
+                    intent.putExtra(Define.KEY_QUESTIONID, answer.getQuestionid());
+                    intent.putExtra(Define.KEY_ANSWERID, answer.getAnswerid());
+                    intent.putExtra(Define.KEY_ANSWER_TITLE, answer.getTitle());
+                    startActivity(intent);
+                }
             }
         });
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL_LIST));
-        mRecyclerView.addOnItemTouchListener(new RecyclerViewItemTouch(this));
+//        mRecyclerView.addOnItemTouchListener(new RecyclerViewItemTouch(this));
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-       return ActivityTouch.parentOnTouch(this, v, event);
+        return ActivityTouch.parentOnTouch(this, v, event);
     }
 
     /**

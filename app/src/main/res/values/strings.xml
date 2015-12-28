@@ -14,4 +14,9 @@
     <string name="text_articlecount">篇</string>
     <string name="title_activity_article_detail">问答列表</string>
     <string name="title_activity_answer">AnswerActivity</string>
+    <string name="title_activity_user">UserActivity</string>
+    <string name="section_userdetail">详细资料</string>
+    <string name="section_userqxz">七星阵</string>
+    <string name="section_userrecent">近日动态</string>
+    <string name="section_userhighvote">高票答案</string>
 </resources>

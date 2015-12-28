@@ -2,7 +2,6 @@ package com.awu.kanzhihu.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +34,7 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
         Intent intent = getIntent();
         initToolbar();
         setTitle(intent);
-        initFlotingActionButton();
+        initFloatingActionButton();
         initProgressBar();
         initWebView(intent);
     }
@@ -72,7 +71,7 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
     /**
      * TODO:next version,now NOT.
      */
-    private void initFlotingActionButton() {
+    private void initFloatingActionButton() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +113,7 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
                     }
                 }
             });
-            mWebView.setOnTouchListener(this);
+//            mWebView.setOnTouchListener(this);
         }
     }
 

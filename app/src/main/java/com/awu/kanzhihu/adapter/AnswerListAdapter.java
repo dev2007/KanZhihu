@@ -34,7 +34,7 @@ public class AnswerListAdapter extends RecyclerView.Adapter<AnswerListAdapter.An
     public AnswerListAdapter(RequestQueue rQueue, RecyclerViewClickListener clickListener) {
         this.answerList = new ArrayList<>();
         this.mQueue = rQueue;
-        this.mImageLoader = new ImageLoader(mQueue, new BitmapCache());
+        this.mImageLoader = new ImageLoader(mQueue, KZHApp.bitmapCacheInstance(mQueue));
         this.mClickListener = clickListener;
     }
 
@@ -130,6 +130,7 @@ public class AnswerListAdapter extends RecyclerView.Adapter<AnswerListAdapter.An
             imageViewAvtar = (ImageView)itemView.findViewById(R.id.iv_avatar);
             textViewAuthorName = (TextView)itemView.findViewById(R.id.tv_authorname);
             textViewVote = (TextView)itemView.findViewById(R.id.tv_vote);
+            imageViewAvtar.setOnClickListener(this);
         }
 
         @Override

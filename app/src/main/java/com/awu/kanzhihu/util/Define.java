@@ -29,6 +29,10 @@ public class Define {
     public static final String Url_CheckNew = "http://api.kanzhihu.com/checknew";
 
     /**
+     * url for user detail.
+     */
+    public static final String Url_UserDetail = "http://api.kanzhihu.com/userdetail2";
+    /**
      * Key for post date.
      */
     public static final String KEY_DATE = "postdate";
@@ -61,6 +65,21 @@ public class Define {
      * Key for old publish time.
      */
     public static final String KEY_OLD_PUBLISH_TIME = "oldpublishtime";
+
+    /**
+     * Key for user hash.
+     */
+    public static final String KEY_USER_HASH = "userhash";
+
+    /**
+     * Key for user name.
+     */
+    public static final String KEY_USER_NAME = "username";
+
+    /**
+     * Key for user avatar.
+     */
+    public static final String KEY_USER_AVATAR = "useravatar";
 
     public enum PostName{
         Yesterday("yesterday", KZHApp.appContext().getString(R.string.text_yesterday)),

@@ -2,10 +2,12 @@ package com.awu.kanzhihu.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -15,9 +17,10 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.awu.kanzhihu.R;
+import com.awu.kanzhihu.bl.ActivityTouch;
 import com.awu.kanzhihu.util.Define;
 
-public class AnswerActivity extends AppCompatActivity {
+public class AnswerActivity extends AppCompatActivity implements View.OnTouchListener {
     private static final String TAG = "AnswerActivity";
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
@@ -47,6 +50,12 @@ public class AnswerActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        overridePendingTransition(0, android.R.anim.slide_out_right);
     }
 
     private void setTitle(Intent intent){
@@ -87,7 +96,7 @@ public class AnswerActivity extends AppCompatActivity {
             mWebView.loadUrl(mUrl);
             mWebView.setWebViewClient(new WebViewClient() {
                 @Override
-                public boolean shouldOverrideUrlLoading(WebView view,String url){
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     view.loadUrl(url);
                     return true;
                 }
@@ -105,6 +114,12 @@ public class AnswerActivity extends AppCompatActivity {
                     }
                 }
             });
+            mWebView.setOnTouchListener(this);
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return ActivityTouch.parentOnTouch(this,v,event);
     }
 }

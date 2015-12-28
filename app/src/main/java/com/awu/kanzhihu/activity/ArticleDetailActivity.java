@@ -1,12 +1,16 @@
 package com.awu.kanzhihu.activity;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.util.Log;
 import android.widget.ProgressBar;
@@ -19,22 +23,21 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.adapter.AnswerListAdapter;
-import com.awu.kanzhihu.adapter.RecyclerAdapter;
+import com.awu.kanzhihu.bl.ActivityTouch;
+import com.awu.kanzhihu.bl.RecyclerViewItemTouch;
 import com.awu.kanzhihu.entity.Answer;
 import com.awu.kanzhihu.entity.AnswerCollection;
-import com.awu.kanzhihu.entity.PostsCollection;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.CommonUtil;
 import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.view.DividerItemDecoration;
 import com.google.gson.Gson;
 
-import java.util.Date;
-
 public class ArticleDetailActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener,
         Response.Listener<String>,
-        Response.ErrorListener {
+        Response.ErrorListener,
+        View.OnTouchListener {
     private static final String TAG = "ArticleDetailActivity";
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
@@ -45,6 +48,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     private RequestQueue mQueue;
     private String date;
     private String name;
+    private GestureDetector mGestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         initSwipeRefreshLayout();
         initRecyclerView();
         requestData(date, name);
+        ((CoordinatorLayout) findViewById(R.id.wrap)).setOnTouchListener(this);
     }
 
     private void initToolbar() {
@@ -73,6 +78,12 @@ public class ArticleDetailActivity extends AppCompatActivity
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(0, android.R.anim.slide_out_right);
+    }
+
     private void setTitle(Intent intent) {
         if (intent != null) {
             String disDate = intent.getStringExtra(Define.KEY_DATE);
@@ -85,8 +96,8 @@ public class ArticleDetailActivity extends AppCompatActivity
         }
     }
 
-    private void initProgressBar(){
-        mProgressBar = (ProgressBar)findViewById(R.id.progressBar_detail);
+    private void initProgressBar() {
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar_detail);
     }
 
     /**
@@ -113,6 +124,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
+
     private void initRecyclerView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_detail);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -120,17 +132,23 @@ public class ArticleDetailActivity extends AppCompatActivity
             @Override
             public void onItemClick(View view, int position) {
                 Answer answer = mAdapter.getAnswer(position);
-                if(answer == null)return;
-                Intent intent = new Intent(getApplicationContext(),AnswerActivity.class);
-                intent.putExtra(Define.KEY_QUESTIONID,answer.getQuestionid());
-                intent.putExtra(Define.KEY_ANSWERID,answer.getAnswerid());
-                intent.putExtra(Define.KEY_ANSWER_TITLE,answer.getTitle());
+                if (answer == null) return;
+                Intent intent = new Intent(getApplicationContext(), AnswerActivity.class);
+                intent.putExtra(Define.KEY_QUESTIONID, answer.getQuestionid());
+                intent.putExtra(Define.KEY_ANSWERID, answer.getAnswerid());
+                intent.putExtra(Define.KEY_ANSWER_TITLE, answer.getTitle());
                 startActivity(intent);
             }
         });
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this,
                 DividerItemDecoration.VERTICAL_LIST));
+        mRecyclerView.addOnItemTouchListener(new RecyclerViewItemTouch(this));
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+       return ActivityTouch.parentOnTouch(this, v, event);
     }
 
     /**
@@ -140,10 +158,8 @@ public class ArticleDetailActivity extends AppCompatActivity
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
-            Log.e(TAG, "refresh");
             requestData(date, name);
         } else {
-            Log.e(TAG, "is refreshing...");
         }
     }
 
@@ -157,16 +173,13 @@ public class ArticleDetailActivity extends AppCompatActivity
     @Override
     public void onResponse(String response) {
         Log.i(TAG, response);
-        Log.i(TAG, response);
         Gson gson = new Gson();
         AnswerCollection collection = gson.fromJson(response, AnswerCollection.class);
         if (!collection.getError().equals("")) {
             Log.i(TAG, "Response Error:" + collection.getError());
             return;
         }
-        Log.i(TAG, "Count:" + collection.getCount());
         mAdapter.bindData(collection);
-        Log.i(TAG, "notify data changed");
         mAdapter.notifyDataSetChanged();
         setNoRefresh();
     }
@@ -182,9 +195,7 @@ public class ArticleDetailActivity extends AppCompatActivity
     }
 
     private void setNoRefresh() {
-        Log.i(TAG, "stop refresh");
-
-        if(mSwipeRefreshLayout.getVisibility() == View.INVISIBLE){
+        if (mSwipeRefreshLayout.getVisibility() == View.INVISIBLE) {
             mProgressBar.setVisibility(View.GONE);
             mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         }
@@ -194,5 +205,4 @@ public class ArticleDetailActivity extends AppCompatActivity
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }
-
 }

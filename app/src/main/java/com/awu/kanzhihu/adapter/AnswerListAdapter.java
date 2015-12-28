@@ -93,8 +93,6 @@ public class AnswerListAdapter extends RecyclerView.Adapter<AnswerListAdapter.An
      * @param imageView
      */
     private void loadPicture(String url, final ImageView imageView) {
-        Log.i(TAG, "load answer list pic");
-
         imageView.setTag(url);
         ImageLoader.ImageListener listener = new ImageLoader.ImageListener() {
             @Override

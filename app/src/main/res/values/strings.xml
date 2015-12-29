@@ -20,4 +20,14 @@
     <string name="section_userqxz">七星阵</string>
     <string name="section_userrecent">近日动态</string>
     <string name="section_userhighvote">高票答案</string>
+    <string name="text_signature">用户签名：</string>
+    <string name="text_ask">提问：</string>
+    <string name="text_agree">赞同：</string>
+    <string name="text_thanks">感谢：</string>
+    <string name="text_answer">回答：</string>
+    <string name="text_post">专栏文章：</string>
+    <string name="text_followee">关注：</string>
+    <string name="text_fav">收藏：</string>
+    <string name="text_logs">公共编辑：</string>
+    <string name="text_follower">被关注：</string>
 </resources>

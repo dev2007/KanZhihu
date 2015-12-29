@@ -18,7 +18,6 @@ import com.awu.kanzhihu.fragment.UserRecentFragment;
  */
 public class UserPagerAdapter extends FragmentPagerAdapter {
     private UserHighVoteFragment mUserHighVoteFragment;
-    private UserRecentFragment mUserRecentFragment;
     private UserDetailFragment mUserDetailFragment;
     private UserQXZFragment mUserQXZFragment;
     private UserDetails userDetails;
@@ -26,7 +25,6 @@ public class UserPagerAdapter extends FragmentPagerAdapter {
     public UserPagerAdapter(FragmentManager fm) {
         super(fm);
         mUserHighVoteFragment = new UserHighVoteFragment();
-        mUserRecentFragment = new UserRecentFragment();
         mUserDetailFragment = new UserDetailFragment();
         mUserQXZFragment = new UserQXZFragment();
     }
@@ -48,10 +46,8 @@ public class UserPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return mUserHighVoteFragment;
             case 1:
-                return mUserRecentFragment;
-            case 2:
                 return mUserDetailFragment;
-            case 3:
+            case 2:
                 return mUserQXZFragment;
             default:
                 return null;
@@ -60,7 +56,7 @@ public class UserPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
 
     @Override
@@ -69,10 +65,8 @@ public class UserPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return KZHApp.appContext().getString(R.string.section_userhighvote);
             case 1:
-                return KZHApp.appContext().getString(R.string.section_userrecent);
-            case 2:
                 return KZHApp.appContext().getString(R.string.section_userdetail);
-            case 3:
+            case 2:
                 return KZHApp.appContext().getString(R.string.section_userqxz);
         }
         return null;

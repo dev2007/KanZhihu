@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.util.Log;
@@ -31,6 +32,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 public class UserActivity extends AppCompatActivity implements Response.Listener<String>, Response.ErrorListener {
     private static final String TAG = "UserActivity";
     private Toolbar mToolbar;
+    private TabLayout mTabLayout;
     //fragmentpageradapter object.
     private UserPagerAdapter mUserPagerAdapter;
     // tablayout's viewpager.
@@ -49,9 +51,14 @@ public class UserActivity extends AppCompatActivity implements Response.Listener
         initToolbar();
         initQueue();
         updateToolbar();
+        initTabLayout();
         initTabWithAdapter();
         initProgressBar();
         requestData();
+    }
+
+    private void initTabLayout() {
+        mTabLayout = (TabLayout) findViewById(R.id.tabs_user);
     }
 
     private void getIntentData() {
@@ -80,6 +87,12 @@ public class UserActivity extends AppCompatActivity implements Response.Listener
                 onBackPressed();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(0, android.R.anim.slide_out_right);
     }
 
     private void updateToolbar() {
@@ -149,8 +162,8 @@ public class UserActivity extends AppCompatActivity implements Response.Listener
             if (!userDetails.getError().equals("")) {
                 Log.i(TAG, "response had error msg:" + userDetails.getError());
                 Toast.makeText(this, getString(R.string.hint_loaderror), Toast.LENGTH_SHORT).show();
-            }else{
-                Log.i(TAG,"response ok");
+            } else {
+                Log.i(TAG, "response ok");
                 mUserPagerAdapter.bindData(userDetails);
             }
         } else {
@@ -161,9 +174,8 @@ public class UserActivity extends AppCompatActivity implements Response.Listener
     }
 
     private void stopRefresh() {
-        if (mProgressBar.getVisibility() == View.VISIBLE) {
-            mProgressBar.setVisibility(View.GONE);
-            mViewPager.setVisibility(View.VISIBLE);
-        }
+        mProgressBar.setVisibility(View.GONE);
+        mTabLayout.setVisibility(View.VISIBLE);
+        mViewPager.setVisibility(View.VISIBLE);
     }
 }

@@ -44,29 +44,36 @@ public class UserHighVoteFragment extends Fragment implements IUserFragment {
         super.onActivityCreated(savedInstanceState);
         mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.rv_topvote);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new UserHighVoteAdapter(new RecyclerViewClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                UserTopAnswer answer = mAdapter.getTopAnswer(position);
-                if(answer != null){
-                    Intent intent = new Intent(getActivity(), AnswerActivity.class);
-                    intent.putExtra(Define.KEY_ANSWER_TITLE,answer.getTitle());
-                    intent.putExtra(Define.KEY_QUESTION_ANSWER,answer.getLink());
-                    startActivity(intent);
+        if (mAdapter == null)
+            mAdapter = new UserHighVoteAdapter(new RecyclerViewClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    UserTopAnswer answer = mAdapter.getTopAnswer(position);
+                    if (answer != null) {
+                        Intent intent = new Intent(getActivity(), AnswerActivity.class);
+                        intent.putExtra(Define.KEY_ANSWER_TITLE, answer.getTitle());
+                        intent.putExtra(Define.KEY_QUESTION_ANSWER, answer.getLink());
+                        intent.putExtra(Define.KEY_ISPOST,answer.ispost());
+                        startActivity(intent);
+                    }
                 }
-            }
-        });
+            });
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
                 DividerItemDecoration.VERTICAL_LIST));
+        if (topAnswerArrayList.size() != 0) {
+            Log.i(TAG, "re bind data");
+            mAdapter.bindData(topAnswerArrayList);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
     public void notifyDataChanged(UserDetails data) {
-        Log.i(TAG,"notify data");
+        Log.i(TAG, "notify data");
         topAnswerArrayList = data.getTopanswers();
-        if(mAdapter != null){
-            Log.i(TAG,"bind data");
+        if (mAdapter != null) {
+            Log.i(TAG, "bind data");
             mAdapter.bindData(topAnswerArrayList);
             mAdapter.notifyDataSetChanged();
         }

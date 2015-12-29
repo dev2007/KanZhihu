@@ -19,9 +19,15 @@ public class Define {
     public static final String Url_AnswerList = "http://api.kanzhihu.com/getpostanswers";
 
     /**
-     * url for Zhihu.com
+     * url for zhihu.com
      */
     public static final String Url_Zhihu = "http://www.zhihu.com";
+
+    /**
+     * url for zhuanlan.zhihu.com
+     */
+    public static final String Url_Zhihu_ZhuanLan = "http://zhuanlan.zhihu.com";
+
     /**
      * url for get answer.
      */
@@ -89,6 +95,11 @@ public class Define {
      * Key for user avatar.
      */
     public static final String KEY_USER_AVATAR = "useravatar";
+
+    /**
+     * Key for if it's zhunlan.
+     */
+    public static final String KEY_ISPOST = "zhuanlan";
 
     public enum PostName{
         Yesterday("yesterday", KZHApp.appContext().getString(R.string.text_yesterday)),

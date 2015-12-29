@@ -12,7 +12,7 @@ public class UserDetail {
     private String agreeiratio;
     private int agreeiw;
     private String agreeiratiow;
-    private int ratio;
+    private float ratio;
     private int followee;
     private int follower;
     private int followeri;
@@ -20,9 +20,9 @@ public class UserDetail {
     private int followeriw;
     private String followiratiow;
     private int thanks;
-    private int tratio;
+    private float tratio;
     private int fav;
-    private int fratio;
+    private float fratio;
     private int logs;
     private int mostvote;
     private String mostvotepercent;
@@ -102,11 +102,11 @@ public class UserDetail {
         this.agreeiratiow = agreeiratiow;
     }
 
-    public int getRatio() {
+    public float getRatio() {
         return ratio;
     }
 
-    public void setRatio(int ratio) {
+    public void setRatio(float ratio) {
         this.ratio = ratio;
     }
 
@@ -166,11 +166,11 @@ public class UserDetail {
         this.thanks = thanks;
     }
 
-    public int getTratio() {
+    public float getTratio() {
         return tratio;
     }
 
-    public void setTratio(int tratio) {
+    public void setTratio(float tratio) {
         this.tratio = tratio;
     }
 
@@ -182,11 +182,11 @@ public class UserDetail {
         this.fav = fav;
     }
 
-    public int getFratio() {
+    public float getFratio() {
         return fratio;
     }
 
-    public void setFratio(int fratio) {
+    public void setFratio(float fratio) {
         this.fratio = fratio;
     }
 

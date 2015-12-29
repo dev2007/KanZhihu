@@ -6,6 +6,7 @@ import java.util.ArrayList;
  * Created by yoyo on 2015/12/28.
  */
 public class UserDetails {
+    private String error;
     private String name;
     private String avatar;
     private String signature;
@@ -13,6 +14,7 @@ public class UserDetails {
     private UserDetail detail;
     private UserStar star;
     private ArrayList<UserTrend> trend;
+    private ArrayList<UserTopAnswer> topanswers;
 
     public ArrayList<UserTrend> getTrend() {
         return trend;
@@ -29,9 +31,6 @@ public class UserDetails {
     public void setTopanswers(ArrayList<UserTopAnswer> topanswers) {
         this.topanswers = topanswers;
     }
-
-    private ArrayList<UserTopAnswer> topanswers;
-
 
     public String getName() {
         return name;
@@ -79,5 +78,13 @@ public class UserDetails {
 
     public void setStar(UserStar star) {
         this.star = star;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }

@@ -34,7 +34,7 @@ public class AnswerListAdapter extends RecyclerView.Adapter<AnswerListAdapter.An
     public AnswerListAdapter(RequestQueue rQueue, RecyclerViewClickListener clickListener) {
         this.answerList = new ArrayList<>();
         this.mQueue = rQueue;
-        this.mImageLoader = new ImageLoader(mQueue, KZHApp.bitmapCacheInstance(mQueue));
+        this.mImageLoader = new ImageLoader(mQueue, KZHApp.bitmapCacheInstance());
         this.mClickListener = clickListener;
     }
 

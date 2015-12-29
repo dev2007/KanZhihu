@@ -19,6 +19,10 @@ public class Define {
     public static final String Url_AnswerList = "http://api.kanzhihu.com/getpostanswers";
 
     /**
+     * url for Zhihu.com
+     */
+    public static final String Url_Zhihu = "http://www.zhihu.com";
+    /**
      * url for get answer.
      */
     public static final String Url_Answer = "http://www.zhihu.com/question";
@@ -50,6 +54,11 @@ public class Define {
      * Key for answer id.
      */
     public static final String KEY_ANSWERID = "answerid";
+
+    /**
+     * Key for question with answer.
+     */
+    public static final String KEY_QUESTION_ANSWER = "question_answer";
 
     /**
      * Key for answer title.

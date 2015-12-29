@@ -7,11 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.awu.kanzhihu.R;
+import com.awu.kanzhihu.entity.UserDetails;
 
 /**
  * Created by awu on 2015-12-28.
  */
-public class UserRecentFragment extends Fragment {
+public class UserRecentFragment extends Fragment implements IUserFragment {
 
     public UserRecentFragment(){
 
@@ -25,5 +26,10 @@ public class UserRecentFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void notifyDataChanged(UserDetails data) {
+
     }
 }

@@ -88,9 +88,14 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
         settings.setJavaScriptEnabled(true);
 
         if (intent != null) {
-            String questionId = intent.getStringExtra(Define.KEY_QUESTIONID);
-            String answerId = intent.getStringExtra(Define.KEY_ANSWERID);
-            mUrl = String.format("%s/%s/answer/%s", Define.Url_Answer, questionId, answerId);
+            String shortUrl = intent.getStringExtra(Define.KEY_QUESTION_ANSWER);
+            if(!shortUrl.equals("")){
+                mUrl = String.format("%s%s", Define.Url_Zhihu,shortUrl);
+            }else {
+                String questionId = intent.getStringExtra(Define.KEY_QUESTIONID);
+                String answerId = intent.getStringExtra(Define.KEY_ANSWERID);
+                mUrl = String.format("%s/%s/answer/%s", Define.Url_Answer, questionId, answerId);
+            }
             Log.i(TAG, mUrl);
             mWebView.loadUrl(mUrl);
             mWebView.setWebViewClient(new WebViewClient() {

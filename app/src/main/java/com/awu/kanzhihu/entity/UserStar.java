@@ -9,6 +9,8 @@ public class UserStar {
     private int ratiorank;
     private int followerrank;
     private int favrank;
+    private int count1000rank;
+    private int count100rank;
 
     public int getFavrank() {
         return favrank;
@@ -33,9 +35,6 @@ public class UserStar {
     public void setCount100rank(int count100rank) {
         this.count100rank = count100rank;
     }
-
-    private int count1000rank;
-    private int count100rank;
 
     public int getFollowerrank() {
         return followerrank;

@@ -8,6 +8,7 @@ public class UserTopAnswer {
     private String link;
     private int agree;
     private String date;
+    private boolean ispost;
 
     public String getTitle() {
         return title;
@@ -48,6 +49,4 @@ public class UserTopAnswer {
     public void setIspost(boolean ispost) {
         this.ispost = ispost;
     }
-
-    private boolean ispost;
 }

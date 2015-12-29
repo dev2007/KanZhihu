@@ -31,10 +31,9 @@ public class KZHApp extends Application {
 
     /**
      * Global ImageCache
-     * @param queue
      * @return
      */
-    public static BitmapCache bitmapCacheInstance(RequestQueue queue) {
+    public static BitmapCache bitmapCacheInstance() {
         if (cache == null)
             cache = new BitmapCache();
 

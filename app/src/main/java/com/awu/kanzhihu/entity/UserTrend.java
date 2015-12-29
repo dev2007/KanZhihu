@@ -7,6 +7,7 @@ public class UserTrend {
     private String date;
     private int answer;
     private int agree;
+    private int follower;
 
     public int getAnswer() {
         return answer;
@@ -31,8 +32,6 @@ public class UserTrend {
     public void setFollower(int follower) {
         this.follower = follower;
     }
-
-    private int follower;
 
     public String getDate() {
         return date;

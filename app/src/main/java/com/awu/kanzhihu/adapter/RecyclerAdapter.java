@@ -39,7 +39,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public RecyclerAdapter(RequestQueue rQueue) {
         this.postList = new ArrayList<>();
         this.mQueue = rQueue;
-        mImageLoader = new ImageLoader(mQueue, new BitmapCache());
+        mImageLoader = new ImageLoader(mQueue, KZHApp.bitmapCacheInstance());
     }
 
     public RecyclerAdapter(RequestQueue rQueue, RecyclerViewClickListener clickListener) {

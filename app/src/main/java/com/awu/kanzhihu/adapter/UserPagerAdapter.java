@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.app.KZHApp;
+import com.awu.kanzhihu.entity.UserDetails;
+import com.awu.kanzhihu.fragment.IUserFragment;
 import com.awu.kanzhihu.fragment.UserDetailFragment;
 import com.awu.kanzhihu.fragment.UserHighVoteFragment;
 import com.awu.kanzhihu.fragment.UserQXZFragment;
@@ -19,6 +21,7 @@ public class UserPagerAdapter extends FragmentPagerAdapter {
     private UserRecentFragment mUserRecentFragment;
     private UserDetailFragment mUserDetailFragment;
     private UserQXZFragment mUserQXZFragment;
+    private UserDetails userDetails;
 
     public UserPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -26,6 +29,17 @@ public class UserPagerAdapter extends FragmentPagerAdapter {
         mUserRecentFragment = new UserRecentFragment();
         mUserDetailFragment = new UserDetailFragment();
         mUserQXZFragment = new UserQXZFragment();
+    }
+
+    /**
+     * bind the user's data to show on fragment.
+     * @param userDetails
+     */
+    public void bindData(UserDetails userDetails){
+        this.userDetails = userDetails;
+        for (int i = 0;i < getCount();i++){
+            ((IUserFragment)getItem(i)).notifyDataChanged(userDetails);
+        }
     }
 
     @Override

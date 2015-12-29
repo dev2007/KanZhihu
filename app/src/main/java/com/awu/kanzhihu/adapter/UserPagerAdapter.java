@@ -10,8 +10,7 @@ import com.awu.kanzhihu.entity.UserDetails;
 import com.awu.kanzhihu.fragment.IUserFragment;
 import com.awu.kanzhihu.fragment.UserDetailFragment;
 import com.awu.kanzhihu.fragment.UserHighVoteFragment;
-import com.awu.kanzhihu.fragment.UserQXZFragment;
-import com.awu.kanzhihu.fragment.UserRecentFragment;
+import com.awu.kanzhihu.fragment.UserRankFragment;
 
 /**
  * Created by awu on 2015-12-28.
@@ -19,14 +18,14 @@ import com.awu.kanzhihu.fragment.UserRecentFragment;
 public class UserPagerAdapter extends FragmentPagerAdapter {
     private UserHighVoteFragment mUserHighVoteFragment;
     private UserDetailFragment mUserDetailFragment;
-    private UserQXZFragment mUserQXZFragment;
+    private UserRankFragment mUserRankFragment;
     private UserDetails userDetails;
 
     public UserPagerAdapter(FragmentManager fm) {
         super(fm);
         mUserHighVoteFragment = new UserHighVoteFragment();
         mUserDetailFragment = new UserDetailFragment();
-        mUserQXZFragment = new UserQXZFragment();
+        mUserRankFragment = new UserRankFragment();
     }
 
     /**
@@ -48,7 +47,7 @@ public class UserPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return mUserDetailFragment;
             case 2:
-                return mUserQXZFragment;
+                return mUserRankFragment;
             default:
                 return null;
         }

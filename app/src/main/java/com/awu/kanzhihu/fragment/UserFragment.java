@@ -118,7 +118,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 if(!topUserList.getError().equals("")){
                     Log.i(TAG,"response has error:" + topUserList.getError());
                 }else {
-                    mAdapter.bindData(topUserList.getTopuser(), currentPage == 1);
+                    mAdapter.bindData(topUserList.getTopuser(), currentPage != 1);
                     mAdapter.notifyDataSetChanged();
                     currentPage++;
                 }

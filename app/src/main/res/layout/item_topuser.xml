@@ -20,7 +20,8 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/view_margin"
         android:layout_toRightOf="@+id/tv_order"
-        app:riv_corner_radius="30dp" />
+        app:riv_corner_radius="30dp"
+        android:src="@drawable/defaultavatar"/>
 
     <TextView
         android:id="@+id/tv_name"

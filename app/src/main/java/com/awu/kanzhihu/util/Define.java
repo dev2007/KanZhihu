@@ -42,6 +42,12 @@ public class Define {
      * url for user detail.
      */
     public static final String Url_UserDetail = "http://api.kanzhihu.com/userdetail2";
+
+    /**
+     * url for top user.
+     */
+    public static final String Url_TopUser = "http://api.kanzhihu.com/topuser";
+
     /**
      * Key for post date.
      */

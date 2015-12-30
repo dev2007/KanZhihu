@@ -211,13 +211,4 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         }
     }
-
-    class FooterViewHolder extends RecyclerView.ViewHolder {
-
-        public FooterViewHolder(View view) {
-            super(view);
-        }
-
-    }
-
 }

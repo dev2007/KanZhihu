@@ -60,7 +60,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i(TAG, "activity created");
+        Log.i(TAG,"activity:"+getActivity().toString());
         if (savedInstanceState != null) {
             latestPublishTime = savedInstanceState.getInt(Define.KEY_PUBLISH_TIME);
             oldestPublishTime = savedInstanceState.getInt(Define.KEY_OLD_PUBLISH_TIME);
@@ -82,17 +82,17 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
 
     private void initProgressBar() {
-        mProgressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
+        mProgressBar = (ProgressBar) getView().findViewById(R.id.progressBar);
     }
 
     private void initSwipeRefreshLayout() {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.swiperefreshlayout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) getView().findViewById(R.id.swiperefreshlayout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark, R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(this);
     }
 
     private void initRecyclerView() {
-        mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerview);
+        mRecyclerView = (RecyclerView) getView().findViewById(R.id.recyclerview);
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -167,6 +167,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void requestData() {
         StringRequest stringRequest = new StringRequest(Define.Url_PostList, this, this);
+        Log.i(TAG,"url:" + Define.Url_PostList);
         mQueue.add(stringRequest);
     }
 

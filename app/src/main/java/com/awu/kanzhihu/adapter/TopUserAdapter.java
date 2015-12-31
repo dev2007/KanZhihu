@@ -1,9 +1,12 @@
 package com.awu.kanzhihu.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.util.Log;
 
@@ -91,7 +94,7 @@ public class TopUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             }
         };
-        mImageLoader.get(url, listener, 600, 300);
+        mImageLoader.get(url, listener, 100, 100);
     }
 
     @Override

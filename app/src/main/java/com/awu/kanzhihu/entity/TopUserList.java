@@ -5,10 +5,10 @@ import java.util.ArrayList;
 /**
  * Created by awu on 2015-12-30.
  */
-public class TopUserList {
+public class TopUserList<T> {
     private String error;
     private int count;
-    private ArrayList<TopUserAgree> topuser;
+    private ArrayList<T> topuser;
 
     public String getError() {
         return error;
@@ -26,11 +26,11 @@ public class TopUserList {
         this.count = count;
     }
 
-    public ArrayList<TopUserAgree> getTopuser() {
+    public ArrayList<T> getTopuser() {
         return topuser;
     }
 
-    public void setTopuser(ArrayList<TopUserAgree> topuser) {
+    public void setTopuser(ArrayList<T> topuser) {
         this.topuser = topuser;
     }
 }

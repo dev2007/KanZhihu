@@ -192,6 +192,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(view);
             this.mClickListener = clickListener;
             imageViewPic = (ImageView) view.findViewById(R.id.iv_pic);
+
             textViewDate = (TextView) view.findViewById(R.id.tv_date);
             textViewName = (TextView) view.findViewById(R.id.tv_name);
             textViewCount = (TextView) view.findViewById(R.id.tv_count);

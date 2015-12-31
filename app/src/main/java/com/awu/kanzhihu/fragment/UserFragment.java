@@ -23,11 +23,13 @@ import com.awu.kanzhihu.activity.ArticleDetailActivity;
 import com.awu.kanzhihu.adapter.RecyclerAdapter;
 import com.awu.kanzhihu.adapter.TopUserAdapter;
 import com.awu.kanzhihu.entity.Post;
+import com.awu.kanzhihu.entity.TopUserAgree;
 import com.awu.kanzhihu.entity.TopUserList;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.view.DividerItemDecoration;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Created by awu on 2015-12-15.
@@ -43,19 +45,19 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private int currentPage = 1;
     private Define.ParamName mParamName = Define.ParamName.Agree;
 
-    public UserFragment(){
+    public UserFragment() {
 
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
-        return inflater.inflate(R.layout.fragment_user,container,false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_user, container, false);
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i(TAG,"activity:"+getActivity().toString());
+        Log.i(TAG, "activity:" + getActivity().toString());
         initProgressBar();
         initSwipeRefreshLayout();
         initMQueue();
@@ -108,37 +110,46 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mQueue = Volley.newRequestQueue(getActivity());
     }
 
-    public void requestParamData(Define.ParamName newParamName){
+    public void requestParamData(Define.ParamName newParamName) {
         mSwipeRefreshLayout.setRefreshing(true);
         this.mParamName = newParamName;
         this.currentPage = 1;
         requestData();
     }
 
-    private void requestData(){
-        String url = String.format("%s/%s/%s",Define.Url_TopUser,mParamName.getName(),currentPage);
-        Log.i(TAG,url);
+    private void requestData() {
+        String url = String.format("%s/%s/%s", Define.Url_TopUser, mParamName.getName(), currentPage);
+        Log.i(TAG, url);
         StringRequest request = new StringRequest(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Gson gson = new Gson();
-                TopUserList topUserList = gson.fromJson(response,TopUserList.class);
-                if(!topUserList.getError().equals("")){
-                    Log.i(TAG,"response has error:" + topUserList.getError());
-                }else {
-                    mAdapter.bindData(topUserList.getTopuser(), currentPage != 1);
-                    mAdapter.notifyDataSetChanged();
-                    currentPage++;
+                TopUserList topUserList = null;
+                switch (mParamName) {
+                    case Agree:
+                        topUserList = gson.fromJson(response, new TypeToken<TopUserList<TopUserAgree>>() {
+                        }.getType());
+                    default:
+                        topUserList = null;
+                }
+                if(topUserList != null) {
+                    if (!topUserList.getError().equals("")) {
+                        Log.i(TAG, "response has error:" + topUserList.getError());
+                    } else {
+                        mAdapter.bindData(topUserList.getTopuser(), currentPage != 1);
+                        mAdapter.notifyDataSetChanged();
+                        currentPage++;
+                    }
                 }
                 stopRefresh();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if(error == null){
-                    Log.i(TAG,"I don't know why.");
-                }else{
-                    Log.i(TAG,"error response "+error.getMessage());
+                if (error == null) {
+                    Log.i(TAG, "I don't know why.");
+                } else {
+                    Log.i(TAG, "error response " + error.getMessage());
                 }
 
                 stopRefresh();
@@ -149,13 +160,13 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
-        if(!mSwipeRefreshLayout.isRefreshing()){
+        if (!mSwipeRefreshLayout.isRefreshing()) {
             currentPage = 1;
             requestData();
         }
     }
 
-    private void stopRefresh(){
+    private void stopRefresh() {
         mProgressBar.setVisibility(View.GONE);
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         mSwipeRefreshLayout.setRefreshing(false);

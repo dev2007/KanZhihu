@@ -80,7 +80,7 @@ public class Define {
     /**
      * Key for publish time.
      */
-    public static final String KEY_PUBLISH_TIME ="publishtime";
+    public static final String KEY_PUBLISH_TIME = "publishtime";
 
     /**
      * Key for old publish time.
@@ -107,30 +107,74 @@ public class Define {
      */
     public static final String KEY_ISPOST = "zhuanlan";
 
-    public enum PostName{
-        Yesterday("yesterday", KZHApp.appContext().getString(R.string.text_yesterday)),
-        Recent("recent",KZHApp.appContext().getString(R.string.text_recent)),
-        Archive("archive",KZHApp.appContext().getString(R.string.text_archive));
 
+    public static String paramName(int value) {
+        switch (value) {
+            case 0:
+                return "agree";
+            case 1:
+                return "";
+            default:
+                return "";
+        }
+    }
+
+    public enum ParamName{
+        Agree(1,"agree","赞同数"),
+        Ask(2,"ask","提问数"),
+        Answer(3,"answer","回答数"),
+        Follower(4,"follower","粉丝数"),
+        Thanks(5,"thanks","感谢数"),
+        Fav(6,"fav","收藏数");
+
+
+        private int mValue;
         private String mName;
-        private String mDisName;
-        private PostName(String name,String disName){
+        private String mShowName;
+        private ParamName(int value,String name,String showName){
+            mValue = value;
             mName = name;
-            mDisName = disName;
+            mShowName = showName;
         }
 
-        public static String getDisplay(String name){
-            switch (name) {
-                case "recent":
-                    return Recent.mDisName;
-                case "yesterday":
-                    return Yesterday.mDisName;
-                case "archive":
-                    return Archive.mDisName;
-                default:
-                    return "";
+        public String getName(){
+            return this.mName;
+        }
 
+        public static ParamName getName(String showName){
+            for (ParamName paramName : ParamName.values()){
+                if(paramName.mShowName.equals(showName))
+                    return paramName;
+            }
+            return Agree;
+        }
+    }
+
+        public enum PostName {
+            Yesterday("yesterday", KZHApp.appContext().getString(R.string.text_yesterday)),
+            Recent("recent", KZHApp.appContext().getString(R.string.text_recent)),
+            Archive("archive", KZHApp.appContext().getString(R.string.text_archive));
+
+            private String mName;
+            private String mDisName;
+
+            private PostName(String name, String disName) {
+                mName = name;
+                mDisName = disName;
+            }
+
+            public static String getDisplay(String name) {
+                switch (name) {
+                    case "recent":
+                        return Recent.mDisName;
+                    case "yesterday":
+                        return Yesterday.mDisName;
+                    case "archive":
+                        return Archive.mDisName;
+                    default:
+                        return "";
+
+                }
             }
         }
     }
-}

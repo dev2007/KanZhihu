@@ -41,6 +41,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private RequestQueue mQueue;
     private TopUserAdapter mAdapter;
     private int currentPage = 1;
+    private Define.ParamName mParamName = Define.ParamName.Agree;
 
     public UserFragment(){
 
@@ -93,7 +94,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             mAdapter = new TopUserAdapter(mQueue, new RecyclerViewClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    Toast.makeText(getActivity(),"hi",Toast.LENGTH_SHORT).show();
+                    //no action.
                 }
             });
         }
@@ -107,8 +108,15 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mQueue = Volley.newRequestQueue(getActivity());
     }
 
+    public void requestParamData(Define.ParamName newParamName){
+        mSwipeRefreshLayout.setRefreshing(true);
+        this.mParamName = newParamName;
+        this.currentPage = 1;
+        requestData();
+    }
+
     private void requestData(){
-        String url = String.format("%s/agree/%s",Define.Url_TopUser,currentPage);
+        String url = String.format("%s/%s/%s",Define.Url_TopUser,mParamName.getName(),currentPage);
         Log.i(TAG,url);
         StringRequest request = new StringRequest(url, new Response.Listener<String>() {
             @Override

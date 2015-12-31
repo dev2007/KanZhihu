@@ -37,4 +37,5 @@
     <string name="text_favrank">收藏：</string>
     <string name="text_count1000rank">千赞：</string>
     <string name="text_count100rank">百赞：</string>
+    <string name="text_sorttitle">选择排序条件</string>
 </resources>

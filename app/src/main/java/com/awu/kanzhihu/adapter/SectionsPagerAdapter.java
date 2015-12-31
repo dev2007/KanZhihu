@@ -10,6 +10,7 @@ import com.awu.kanzhihu.app.KZHApp;
 import com.awu.kanzhihu.fragment.ArticleFragment;
 import com.awu.kanzhihu.fragment.SettingFragment;
 import com.awu.kanzhihu.fragment.UserFragment;
+import com.awu.kanzhihu.util.Define;
 
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -27,6 +28,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         articleFragment = new ArticleFragment();
         userFragment = new UserFragment();
         settingFragment = new SettingFragment();
+    }
+
+    public void changeUserQuery(Define.ParamName paramName){
+        userFragment.requestParamData(paramName);
     }
 
     @Override

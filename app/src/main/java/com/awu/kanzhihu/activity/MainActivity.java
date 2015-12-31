@@ -1,5 +1,7 @@
 package com.awu.kanzhihu.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,9 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.adapter.SectionsPagerAdapter;
+import com.awu.kanzhihu.util.Define;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -81,9 +85,21 @@ public class MainActivity extends AppCompatActivity {
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(final View view) {
+                AlertDialog dialog = new AlertDialog.Builder(view.getContext())
+                        .setTitle(R.string.text_sorttitle)
+                        .setItems(R.array.sortparam, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String[] listArray = getResources().getStringArray(R.array.sortparam);
+                                String name = listArray[which];
+                                Toast.makeText(view.getContext(), "选择了" + name, Toast.LENGTH_SHORT).show();
+                                Define.ParamName param = Define.ParamName.getName(name);
+                                mSectionsPagerAdapter.changeUserQuery(param);
+                            }
+                        })
+                        .create();
+                dialog.show();
             }
         });
     }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="sortparam">
+        <item>赞同数</item>
+        <item>提问数</item>
+        <item>回答数</item>
+        <item>感谢数</item>
+        <item>粉丝数</item>
+        <item>收藏数</item>
+    </array>
+</resources>

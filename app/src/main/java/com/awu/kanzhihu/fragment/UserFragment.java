@@ -134,7 +134,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     case Ask:
                         topUserList = gson.fromJson(response, new TypeToken<TopUserList<TopUserAsk>>() {
                         }.getType());
-                        break;
+                        break;//TODO:
                     default:
                         topUserList = null;
                 }

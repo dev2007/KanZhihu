@@ -24,6 +24,7 @@ import com.awu.kanzhihu.adapter.RecyclerAdapter;
 import com.awu.kanzhihu.adapter.TopUserAdapter;
 import com.awu.kanzhihu.entity.Post;
 import com.awu.kanzhihu.entity.TopUserAgree;
+import com.awu.kanzhihu.entity.TopUserAsk;
 import com.awu.kanzhihu.entity.TopUserList;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.Define;
@@ -129,6 +130,11 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     case Agree:
                         topUserList = gson.fromJson(response, new TypeToken<TopUserList<TopUserAgree>>() {
                         }.getType());
+                        break;
+                    case Ask:
+                        topUserList = gson.fromJson(response, new TypeToken<TopUserList<TopUserAsk>>() {
+                        }.getType());
+                        break;
                     default:
                         topUserList = null;
                 }

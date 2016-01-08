@@ -16,6 +16,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.app.KZHApp;
 import com.awu.kanzhihu.entity.TopUserAgree;
+import com.awu.kanzhihu.entity.TopUserAsk;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -29,7 +30,7 @@ public class TopUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private RequestQueue mQueue;
     private RecyclerViewClickListener mClickListener;
     private ImageLoader mImageLoader;
-    private ArrayList<TopUserAgree> mArrayList;
+    private ArrayList mArrayList;
     private final int TYPE_ITEM = 0;
     private final int TYPE_FOOTER = 1;
 
@@ -67,13 +68,24 @@ public class TopUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof TopUserViewHolder) {
             Log.i(TAG, "load row data,position:" + position);
-            TopUserAgree topUserAgree = mArrayList.get(position);
-            TopUserViewHolder viewHolder = (TopUserViewHolder) holder;
-            loadPicture(topUserAgree.getAvatar(), viewHolder.roundedImageViewAvatar);
-            viewHolder.textViewName.setText(topUserAgree.getName());
-            viewHolder.textViewAgree.setText("" + topUserAgree.getAgree());
-            viewHolder.textViewSiganature.setText(topUserAgree.getSignature());
-            viewHolder.textViewOrder.setText("" + (position + 1));
+            Object topUser = mArrayList.get(position);
+            if(topUser instanceof TopUserAgree) {
+                TopUserAgree topUserAgree = (TopUserAgree)topUser;
+                TopUserViewHolder viewHolder = (TopUserViewHolder) holder;
+                loadPicture(topUserAgree.getAvatar(), viewHolder.roundedImageViewAvatar);
+                viewHolder.textViewName.setText(topUserAgree.getName());
+                viewHolder.textViewAgree.setText("" + topUserAgree.getAgree());
+                viewHolder.textViewSiganature.setText(topUserAgree.getSignature());
+                viewHolder.textViewOrder.setText("" + (position + 1));
+            }else if(topUser instanceof TopUserAsk){
+                TopUserAsk topUserAsk = (TopUserAsk)topUser;
+                TopUserViewHolder viewHolder = (TopUserViewHolder) holder;
+                loadPicture(topUserAsk.getAvatar(), viewHolder.roundedImageViewAvatar);
+                viewHolder.textViewName.setText(topUserAsk.getName());
+                viewHolder.textViewAgree.setText("" + topUserAsk.getAsk());
+                viewHolder.textViewSiganature.setText(topUserAsk.getSignature());
+                viewHolder.textViewOrder.setText("" + (position + 1));
+            }
         }
     }
 
@@ -105,10 +117,10 @@ public class TopUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     /**
      * attach data with adapter.
      *
-     * @param collection
+     * @param collection the source data need to be added.
      * @param appendToEnd true,the new data.
      */
-    public void bindData(ArrayList<TopUserAgree> collection, boolean appendToEnd) {
+    public void bindData(ArrayList collection, boolean appendToEnd) {
         if (appendToEnd) {
             append(mArrayList, collection, appendToEnd);
         } else {
@@ -116,14 +128,14 @@ public class TopUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    private void append(ArrayList<TopUserAgree> sourceList, ArrayList<TopUserAgree> otherList, boolean appendToEnd) {
+    private<T> void append(ArrayList<T> sourceList, ArrayList<T> otherList, boolean appendToEnd) {
         //if append to end
         if (appendToEnd) {
-            for (TopUserAgree topUserAgree : otherList) {
+            for (T topUserAgree : otherList) {
                 sourceList.add(topUserAgree);
             }
         } else {
-            for (TopUserAgree topUserAgree : sourceList) {
+            for (T topUserAgree : sourceList) {
                 otherList.add(topUserAgree);
             }
             sourceList = otherList;
@@ -136,7 +148,7 @@ public class TopUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      * @param position
      * @return
      */
-    public TopUserAgree getData(int position) {
+    public Object getData(int position) {
         return mArrayList.get(position);
     }
 

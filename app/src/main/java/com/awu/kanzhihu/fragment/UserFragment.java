@@ -43,6 +43,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private static final String TAG = "UserFragment";
     private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private boolean isSwipeRefreshing = false;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private RequestQueue mQueue;
@@ -186,7 +187,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
-        if (!mSwipeRefreshLayout.isRefreshing()) {
+        if (!isSwipeRefreshing) {
+            isSwipeRefreshing = true;
             currentPage = 1;
             requestData();
         }
@@ -196,5 +198,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mProgressBar.setVisibility(View.GONE);
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         mSwipeRefreshLayout.setRefreshing(false);
+        isSwipeRefreshing = false;
     }
 }

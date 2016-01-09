@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">看知乎</string>
+    <string name="action_search">搜索用户</string>
     <string name="action_about">关于</string>
     <string name="action_exit">退出应用</string>
     <string name="section_article">热门文章</string>
     <string name="section_user">用户动态</string>
     <string name="section_setting">设置</string>
+    <string name="hint_search">请输入用户名称或ID</string>
     <string name="hint_refresh">加载失败，请下拉刷新</string>
     <string name="hint_pushrefresh">加载失败，请上拉刷新</string>
     <string name="hint_nonew">暂时没有更新，请稍晚再试\n每日更新时间为5、11、17点</string>

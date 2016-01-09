@@ -24,8 +24,12 @@ import com.awu.kanzhihu.adapter.RecyclerAdapter;
 import com.awu.kanzhihu.adapter.TopUserAdapter;
 import com.awu.kanzhihu.entity.Post;
 import com.awu.kanzhihu.entity.TopUserAgree;
+import com.awu.kanzhihu.entity.TopUserAnswer;
 import com.awu.kanzhihu.entity.TopUserAsk;
+import com.awu.kanzhihu.entity.TopUserFav;
+import com.awu.kanzhihu.entity.TopUserFollower;
 import com.awu.kanzhihu.entity.TopUserList;
+import com.awu.kanzhihu.entity.TopUserThanks;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.view.DividerItemDecoration;
@@ -134,11 +138,27 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     case Ask:
                         topUserList = gson.fromJson(response, new TypeToken<TopUserList<TopUserAsk>>() {
                         }.getType());
-                        break;//TODO:
+                        break;
+                    case Answer:
+                        topUserList = gson.fromJson(response, new TypeToken<TopUserList<TopUserAnswer>>() {
+                        }.getType());
+                        break;
+                    case Follower:
+                        topUserList = gson.fromJson(response, new TypeToken<TopUserList<TopUserFollower>>() {
+                        }.getType());
+                        break;
+                    case Thanks:
+                        topUserList = gson.fromJson(response, new TypeToken<TopUserList<TopUserThanks>>() {
+                        }.getType());
+                        break;
+                    case Fav:
+                        topUserList = gson.fromJson(response, new TypeToken<TopUserList<TopUserFav>>() {
+                        }.getType());
+                        break;
                     default:
                         topUserList = null;
                 }
-                if(topUserList != null) {
+                if (topUserList != null) {
                     if (!topUserList.getError().equals("")) {
                         Log.i(TAG, "response has error:" + topUserList.getError());
                     } else {

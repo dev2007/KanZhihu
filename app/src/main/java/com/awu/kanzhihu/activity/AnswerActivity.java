@@ -89,7 +89,7 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
 
         if (intent != null) {
             String shortUrl = intent.getStringExtra(Define.KEY_QUESTION_ANSWER);
-            if(!shortUrl.equals("")){
+            if(shortUrl != null){
                 boolean isPost = intent.getBooleanExtra(Define.KEY_ISPOST,false);
                 if(isPost){
                     mUrl = String.format("%s%s", Define.Url_Zhihu_ZhuanLan,shortUrl);

@@ -141,6 +141,9 @@ public class Define {
             return this.mName;
         }
 
+        public String getShowName(){
+            return mShowName;
+        }
         public static ParamName getName(String showName){
             for (ParamName paramName : ParamName.values()){
                 if(paramName.mShowName.equals(showName))

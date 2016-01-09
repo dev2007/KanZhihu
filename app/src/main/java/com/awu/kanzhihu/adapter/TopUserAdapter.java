@@ -1,12 +1,9 @@
 package com.awu.kanzhihu.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.util.Log;
 
@@ -16,8 +13,13 @@ import com.android.volley.toolbox.ImageLoader;
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.app.KZHApp;
 import com.awu.kanzhihu.entity.TopUserAgree;
+import com.awu.kanzhihu.entity.TopUserAnswer;
 import com.awu.kanzhihu.entity.TopUserAsk;
+import com.awu.kanzhihu.entity.TopUserFav;
+import com.awu.kanzhihu.entity.TopUserFollower;
+import com.awu.kanzhihu.entity.TopUserThanks;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
+import com.awu.kanzhihu.util.Define;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
@@ -69,22 +71,55 @@ public class TopUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (holder instanceof TopUserViewHolder) {
             Log.i(TAG, "load row data,position:" + position);
             Object topUser = mArrayList.get(position);
-            if(topUser instanceof TopUserAgree) {
-                TopUserAgree topUserAgree = (TopUserAgree)topUser;
-                TopUserViewHolder viewHolder = (TopUserViewHolder) holder;
+            TopUserViewHolder viewHolder = (TopUserViewHolder) holder;
+            if (topUser instanceof TopUserAgree) {
+                TopUserAgree topUserAgree = (TopUserAgree) topUser;
                 loadPicture(topUserAgree.getAvatar(), viewHolder.roundedImageViewAvatar);
                 viewHolder.textViewName.setText(topUserAgree.getName());
                 viewHolder.textViewAgree.setText("" + topUserAgree.getAgree());
-                viewHolder.textViewSiganature.setText(topUserAgree.getSignature());
+                viewHolder.textViewSignature.setText(topUserAgree.getSignature());
                 viewHolder.textViewOrder.setText("" + (position + 1));
-            }else if(topUser instanceof TopUserAsk){
-                TopUserAsk topUserAsk = (TopUserAsk)topUser;
-                TopUserViewHolder viewHolder = (TopUserViewHolder) holder;
+                viewHolder.textViewTopName.setText(Define.ParamName.Agree.getShowName());
+            } else if (topUser instanceof TopUserAsk) {
+                TopUserAsk topUserAsk = (TopUserAsk) topUser;
                 loadPicture(topUserAsk.getAvatar(), viewHolder.roundedImageViewAvatar);
                 viewHolder.textViewName.setText(topUserAsk.getName());
                 viewHolder.textViewAgree.setText("" + topUserAsk.getAsk());
-                viewHolder.textViewSiganature.setText(topUserAsk.getSignature());
+                viewHolder.textViewSignature.setText(topUserAsk.getSignature());
                 viewHolder.textViewOrder.setText("" + (position + 1));
+                viewHolder.textViewTopName.setText(Define.ParamName.Ask.getShowName());
+            } else if (topUser instanceof TopUserAnswer) {
+                TopUserAnswer topUserAnswer = (TopUserAnswer) topUser;
+                loadPicture(topUserAnswer.getAvatar(), viewHolder.roundedImageViewAvatar);
+                viewHolder.textViewName.setText(topUserAnswer.getName());
+                viewHolder.textViewAgree.setText("" + topUserAnswer.getAnswer());
+                viewHolder.textViewSignature.setText(topUserAnswer.getSignature());
+                viewHolder.textViewOrder.setText("" + (position + 1));
+                viewHolder.textViewTopName.setText(Define.ParamName.Answer.getShowName());
+            } else if (topUser instanceof TopUserFollower) {
+                TopUserFollower topUserFollower = (TopUserFollower) topUser;
+                loadPicture(topUserFollower.getAvatar(), viewHolder.roundedImageViewAvatar);
+                viewHolder.textViewName.setText(topUserFollower.getName());
+                viewHolder.textViewAgree.setText("" + topUserFollower.getFollower());
+                viewHolder.textViewSignature.setText(topUserFollower.getSignature());
+                viewHolder.textViewOrder.setText("" + (position + 1));
+                viewHolder.textViewTopName.setText(Define.ParamName.Follower.getShowName());
+            } else if (topUser instanceof TopUserThanks) {
+                TopUserThanks topUserThanks = (TopUserThanks) topUser;
+                loadPicture(topUserThanks.getAvatar(), viewHolder.roundedImageViewAvatar);
+                viewHolder.textViewName.setText(topUserThanks.getName());
+                viewHolder.textViewAgree.setText("" + topUserThanks.getThanks());
+                viewHolder.textViewSignature.setText(topUserThanks.getSignature());
+                viewHolder.textViewOrder.setText("" + (position + 1));
+                viewHolder.textViewTopName.setText(Define.ParamName.Thanks.getShowName());
+            } else if (topUser instanceof TopUserFav) {
+                TopUserFav topUserFav = (TopUserFav) topUser;
+                loadPicture(topUserFav.getAvatar(), viewHolder.roundedImageViewAvatar);
+                viewHolder.textViewName.setText(topUserFav.getName());
+                viewHolder.textViewAgree.setText("" + topUserFav.getFav());
+                viewHolder.textViewSignature.setText(topUserFav.getSignature());
+                viewHolder.textViewOrder.setText("" + (position + 1));
+                viewHolder.textViewTopName.setText(Define.ParamName.Fav.getShowName());
             }
         }
     }
@@ -117,7 +152,7 @@ public class TopUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     /**
      * attach data with adapter.
      *
-     * @param collection the source data need to be added.
+     * @param collection  the source data need to be added.
      * @param appendToEnd true,the new data.
      */
     public void bindData(ArrayList collection, boolean appendToEnd) {
@@ -128,7 +163,7 @@ public class TopUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    private<T> void append(ArrayList<T> sourceList, ArrayList<T> otherList, boolean appendToEnd) {
+    private <T> void append(ArrayList<T> sourceList, ArrayList<T> otherList, boolean appendToEnd) {
         //if append to end
         if (appendToEnd) {
             for (T topUserAgree : otherList) {
@@ -157,8 +192,9 @@ public class TopUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private RoundedImageView roundedImageViewAvatar;
         private TextView textViewName;
         private TextView textViewAgree;
-        private TextView textViewSiganature;
+        private TextView textViewSignature;
         private TextView textViewOrder;
+        private TextView textViewTopName;
 
         public TopUserViewHolder(View itemView, RecyclerViewClickListener clickListener) {
             super(itemView);
@@ -168,13 +204,14 @@ public class TopUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             roundedImageViewAvatar = (RoundedImageView) itemView.findViewById(R.id.iv_avatar);
             textViewName = (TextView) itemView.findViewById(R.id.tv_name);
             textViewAgree = (TextView) itemView.findViewById(R.id.tv_agree);
-            textViewSiganature = (TextView) itemView.findViewById(R.id.tv_signature);
+            textViewSignature = (TextView) itemView.findViewById(R.id.tv_signature);
             textViewOrder = (TextView) itemView.findViewById(R.id.tv_order);
+            textViewTopName = (TextView)itemView.findViewById(R.id.tv_topname);
         }
 
         @Override
         public void onClick(View v) {
-            Log.e(TAG,"click");
+            Log.e(TAG, "click");
             if (mClickListener != null) {
                 mClickListener.onItemClick(v, getPosition());
             }

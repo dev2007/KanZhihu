@@ -5,9 +5,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     // tablayout's viewpager.
     private ViewPager mViewPager;
     private FloatingActionButton fab;
+    private SearchView mSearchView;
+    private MenuItem mSearchItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +66,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if(position == 1){
+                if (position == 1) {
                     fab.setVisibility(View.VISIBLE);
-                }else{
+                    mSearchItem.setVisible(true);
+                } else {
                     fab.setVisibility(View.INVISIBLE);
+                    mSearchItem.setVisible(false);
                 }
+                mSearchItem.collapseActionView();
             }
 
             @Override
@@ -105,7 +113,41 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        mSearchItem = menu.findItem(R.id.action_search);
+        initSearchView();
         return true;
+    }
+
+    private void initSearchView() {
+        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
+        mSearchView.setQueryHint(getString(R.string.hint_search));
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mSectionsPagerAdapter.search(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(mSearchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                mSectionsPagerAdapter.searchViewExpand();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                mSectionsPagerAdapter.searchViewCollapse();
+                return true;
+            }
+        });
+
     }
 
     @Override
@@ -113,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
+            Log.i(TAG, "click setting.");
             return true;
         }
 

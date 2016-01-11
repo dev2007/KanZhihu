@@ -163,6 +163,14 @@ public class TopUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    public void clearData(){
+        mArrayList = new ArrayList();
+    }
+
+    public ArrayList getData(){
+        return (ArrayList)mArrayList.clone();
+    }
+
     private <T> void append(ArrayList<T> sourceList, ArrayList<T> otherList, boolean appendToEnd) {
         //if append to end
         if (appendToEnd) {

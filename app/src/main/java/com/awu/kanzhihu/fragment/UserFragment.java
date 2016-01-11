@@ -36,6 +36,8 @@ import com.awu.kanzhihu.view.DividerItemDecoration;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
+
 /**
  * Created by awu on 2015-12-15.
  */
@@ -50,9 +52,10 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private TopUserAdapter mAdapter;
     private int currentPage = 1;
     private Define.ParamName mParamName = Define.ParamName.Agree;
+    private ArrayList mUserListCache;
 
     public UserFragment() {
-
+        mUserListCache = new ArrayList();
     }
 
     @Override
@@ -123,6 +126,22 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         requestData();
     }
 
+    public void searchExpand(){
+        Log.i(TAG,"expand");
+        mAdapter.clearData();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void searchCollapse(){
+        Log.i(TAG,"collapse");
+        mAdapter.bindData(mUserListCache,false);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void search(String query){
+        Log.i(TAG,"search");
+    }
+
     private void requestData() {
         String url = String.format("%s/%s/%s", Define.Url_TopUser, mParamName.getName(), currentPage);
         Log.i(TAG, url);
@@ -163,6 +182,7 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     if (!topUserList.getError().equals("")) {
                         Log.i(TAG, "response has error:" + topUserList.getError());
                     } else {
+                        mUserListCache = topUserList.getTopuser();
                         mAdapter.bindData(topUserList.getTopuser(), currentPage != 1);
                         mAdapter.notifyDataSetChanged();
                         currentPage++;

@@ -49,6 +49,11 @@ public class Define {
     public static final String Url_TopUser = "http://api.kanzhihu.com/topuser";
 
     /**
+     * url for search user.
+     */
+    public static final String Url_Search = "http://api.kanzhihu.com/searchuser";
+
+    /**
      * Key for post date.
      */
     public static final String KEY_DATE = "postdate";

@@ -20,9 +20,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.activity.ArticleDetailActivity;
+import com.awu.kanzhihu.activity.UserActivity;
 import com.awu.kanzhihu.adapter.RecyclerAdapter;
 import com.awu.kanzhihu.adapter.TopUserAdapter;
 import com.awu.kanzhihu.entity.Post;
+import com.awu.kanzhihu.entity.TopUser;
 import com.awu.kanzhihu.entity.TopUserAgree;
 import com.awu.kanzhihu.entity.TopUserAnswer;
 import com.awu.kanzhihu.entity.TopUserAsk;
@@ -51,11 +53,10 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private RequestQueue mQueue;
     private TopUserAdapter mAdapter;
     private int currentPage = 1;
-    private Define.ParamName mParamName = Define.ParamName.Agree;
-    private ArrayList mUserListCache;
+    private Define.ParamName mParamName = Define.ParamName.Agree;;
 
     public UserFragment() {
-        mUserListCache = new ArrayList();
+
     }
 
     @Override
@@ -105,7 +106,12 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             mAdapter = new TopUserAdapter(mQueue, new RecyclerViewClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    //no action.
+                    TopUser user = (TopUser)mAdapter.getData(position);
+                    Intent intent = new Intent(view.getContext(), UserActivity.class);
+                    intent.putExtra(Define.KEY_USER_HASH, user.getHash());
+                    intent.putExtra(Define.KEY_USER_AVATAR,user.getAvatar());
+                    intent.putExtra(Define.KEY_USER_NAME,user.getName());
+                    startActivity(intent);
                 }
             });
         }
@@ -124,22 +130,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         this.mParamName = newParamName;
         this.currentPage = 1;
         requestData();
-    }
-
-    public void searchExpand(){
-        Log.i(TAG,"expand");
-        mAdapter.clearData();
-        mAdapter.notifyDataSetChanged();
-    }
-
-    public void searchCollapse(){
-        Log.i(TAG,"collapse");
-        mAdapter.bindData(mUserListCache,false);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    public void search(String query){
-        Log.i(TAG,"search");
     }
 
     private void requestData() {
@@ -182,7 +172,6 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     if (!topUserList.getError().equals("")) {
                         Log.i(TAG, "response has error:" + topUserList.getError());
                     } else {
-                        mUserListCache = topUserList.getTopuser();
                         mAdapter.bindData(topUserList.getTopuser(), currentPage != 1);
                         mAdapter.notifyDataSetChanged();
                         currentPage++;

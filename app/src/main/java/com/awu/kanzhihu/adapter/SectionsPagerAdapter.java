@@ -34,18 +34,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         userFragment.requestParamData(paramName);
     }
 
-    public void searchViewExpand(){
-        userFragment.searchExpand();
-    }
-
-    public void search(String query){
-        userFragment.search(query);
-    }
-
-    public void searchViewCollapse(){
-        userFragment.searchCollapse();
-    }
-
     @Override
     public Fragment getItem(int position) {
         switch (position){

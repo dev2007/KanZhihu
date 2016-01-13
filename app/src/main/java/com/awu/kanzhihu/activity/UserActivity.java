@@ -25,6 +25,7 @@ import com.awu.kanzhihu.adapter.UserPagerAdapter;
 import com.awu.kanzhihu.app.KZHApp;
 import com.awu.kanzhihu.entity.UserDetails;
 import com.awu.kanzhihu.util.BitmapCache;
+import com.awu.kanzhihu.util.CommonUtil;
 import com.awu.kanzhihu.util.Define;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -113,7 +114,7 @@ public class UserActivity extends AppCompatActivity implements Response.Listener
 
                 }
             };
-            mImageLoader.get(avatarUrl, listener, 600, 600);
+            mImageLoader.get(avatarUrl, listener, CommonUtil.convertImageSize(30), CommonUtil.convertImageSize(30));
         }
     }
 

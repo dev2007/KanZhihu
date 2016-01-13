@@ -71,14 +71,14 @@ public class UserDetailFragment extends Fragment implements IUserFragment {
     private void updateData() {
         textViewSignature.setText(signature);
         textViewDescription.setText(description);
-        textViewAgree.setText("" + detail.getAgree());
-        textViewThanks.setText("" + detail.getThanks());
-        textViewFollower.setText("" + detail.getFollower());
-        textViewAsk.setText("" + detail.getAsk());
-        textViewAnswer.setText("" + detail.getAnswer());
-        textViewPost.setText("" + detail.getPost());
-        textViewFollowee.setText("" + detail.getFollowee());
-        textViewFav.setText("" + detail.getFav());
-        textViewLogs.setText("" + detail.getLogs());
+        textViewAgree.setText(" " + detail.getAgree());
+        textViewThanks.setText(" " + detail.getThanks());
+        textViewFollower.setText(" " + detail.getFollower());
+        textViewAsk.setText(" " + detail.getAsk());
+        textViewAnswer.setText(" " + detail.getAnswer());
+        textViewPost.setText(" " + detail.getPost());
+        textViewFollowee.setText(" " + detail.getFollowee());
+        textViewFav.setText(" " + detail.getFav());
+        textViewLogs.setText(" " + detail.getLogs());
     }
 }

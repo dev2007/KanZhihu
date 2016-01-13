@@ -1,6 +1,7 @@
 package com.awu.kanzhihu.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.awu.kanzhihu.entity.TopUserFav;
 import com.awu.kanzhihu.entity.TopUserFollower;
 import com.awu.kanzhihu.entity.TopUserThanks;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
+import com.awu.kanzhihu.util.CommonUtil;
 import com.awu.kanzhihu.util.Define;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -141,7 +143,8 @@ public class TopUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             }
         };
-        mImageLoader.get(url, listener, 100, 100);
+
+        mImageLoader.get(url, listener, CommonUtil.convertImageSize(30), CommonUtil.convertImageSize(30));
     }
 
     @Override

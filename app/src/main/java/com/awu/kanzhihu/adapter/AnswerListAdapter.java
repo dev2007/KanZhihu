@@ -109,7 +109,7 @@ public class AnswerListAdapter extends RecyclerView.Adapter<AnswerListAdapter.An
 
             }
         };
-        mImageLoader.get(url, listener, 600, 300);
+        mImageLoader.get(url, listener, CommonUtil.convertImageSize(30), CommonUtil.convertImageSize(30));
 
     }
 

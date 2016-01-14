@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/cardview_margin"
+    android:layout_marginTop="@dimen/cardview_margin"
+    android:layout_marginLeft="@dimen/cardview_margin"
+    android:layout_marginRight="@dimen/cardview_margin"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="3dp"
@@ -11,15 +13,15 @@
     android:id="@+id/cv_post">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/view_margin">
 
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/view_margin"
-            android:layout_marginTop="@dimen/view_margin"
             android:text="示例名称"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp" />
@@ -29,7 +31,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/view_margin"
-            android:layout_marginTop="@dimen/view_margin"
             android:layout_toRightOf="@+id/tv_name"
             android:text="33篇"
             android:textColor="@color/colorOrange"

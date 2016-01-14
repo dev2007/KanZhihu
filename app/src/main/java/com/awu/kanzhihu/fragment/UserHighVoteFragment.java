@@ -59,8 +59,8 @@ public class UserHighVoteFragment extends Fragment implements IUserFragment {
                 }
             });
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
-                DividerItemDecoration.VERTICAL_LIST));
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
+//                DividerItemDecoration.VERTICAL_LIST));
         if (topAnswerArrayList.size() != 0) {
             Log.i(TAG, "re bind data");
             mAdapter.bindData(topAnswerArrayList);

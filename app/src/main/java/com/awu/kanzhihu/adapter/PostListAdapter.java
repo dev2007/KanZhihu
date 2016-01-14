@@ -1,12 +1,12 @@
 package com.awu.kanzhihu.adapter;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
@@ -16,7 +16,6 @@ import com.awu.kanzhihu.app.KZHApp;
 import com.awu.kanzhihu.entity.Post;
 import com.awu.kanzhihu.entity.PostsCollection;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
-import com.awu.kanzhihu.util.BitmapCache;
 import com.awu.kanzhihu.util.Define;
 
 import java.util.ArrayList;
@@ -24,8 +23,8 @@ import java.util.ArrayList;
 /**
  * Created by awu on 2015-12-17.
  */
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String TAG = "RecyclerAdapter";
+public class PostListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = "PostListAdapter";
 
     private ArrayList<Post> postList;
     private RequestQueue mQueue;
@@ -35,14 +34,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private final int TYPE_ITEM = 0;
     private final int TYPE_FOOTER = 1;
+    private final int TYPE_ITEM_DATE = 2;
 
-    public RecyclerAdapter(RequestQueue rQueue) {
+    public PostListAdapter(RequestQueue rQueue) {
         this.postList = new ArrayList<>();
         this.mQueue = rQueue;
         mImageLoader = new ImageLoader(mQueue, KZHApp.bitmapCacheInstance());
     }
 
-    public RecyclerAdapter(RequestQueue rQueue, RecyclerViewClickListener clickListener) {
+    public PostListAdapter(RequestQueue rQueue, RecyclerViewClickListener clickListener) {
         this(rQueue);
         this.mClickListener = clickListener;
     }
@@ -52,7 +52,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (position + 1 == getItemCount()) {
             return TYPE_FOOTER;
         } else {
-            return TYPE_ITEM;
+            if(position == 0)
+                return TYPE_ITEM_DATE;
+            else {
+                if(!getPost(position).getDate().equals(getPost(position - 1).getDate()))
+                    return TYPE_ITEM_DATE;
+                return TYPE_ITEM;
+            }
         }
     }
 
@@ -62,20 +68,33 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             FooterViewHolder holder = new FooterViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(R.layout.footerview, parent, false));
             return holder;
-        } else {
-            RecyclerViewHolder holder = new RecyclerViewHolder(
+        } else if(viewType == TYPE_ITEM){
+            NormalAnswerHolder holder = new NormalAnswerHolder(
                     LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home, parent, false), mClickListener);
+            return holder;
+        }else{
+            NormalAnswerWithDateHolder holder = new NormalAnswerWithDateHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.item_homewithdate, parent, false), mClickListener);
             return holder;
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof RecyclerViewHolder) {
-            RecyclerViewHolder viewHolder = ((RecyclerViewHolder) holder);
+        if (holder instanceof NormalAnswerHolder) {
+            NormalAnswerHolder viewHolder = ((NormalAnswerHolder) holder);
             Post post = postList.get(position);
-            Log.i(TAG, "load row,date:" + post.getDate() + " name:" + post.getName() + " position:" + position);
-            loadPicture(post.getPic(), viewHolder.imageViewPic);
+
+            String name = Define.PostName.getDisplay(post.getName());
+            viewHolder.textViewName.setText(name);
+
+            String countStr = String.format("%d%s", post.getCount(), KZHApp.appContext().getString(R.string.text_articlecount));
+            viewHolder.textViewCount.setText(countStr);
+            viewHolder.textViewExcerpt.setText(post.getExcerpt());
+        }else if(holder instanceof  NormalAnswerWithDateHolder){
+            NormalAnswerWithDateHolder viewHolder = ((NormalAnswerWithDateHolder) holder);
+            Post post = postList.get(position);
+
             viewHolder.textViewDate.setText(post.getDate());
 
             String name = Define.PostName.getDisplay(post.getName());
@@ -83,6 +102,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             String countStr = String.format("%d%s", post.getCount(), KZHApp.appContext().getString(R.string.text_articlecount));
             viewHolder.textViewCount.setText(countStr);
+            viewHolder.textViewExcerpt.setText(post.getExcerpt());
         }
     }
 
@@ -181,22 +201,54 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
-    class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class NormalAnswerHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private RecyclerViewClickListener mClickListener;
-        private ImageView imageViewPic;
+        private TextView textViewName;
+        private TextView textViewCount;
+        private TextView textViewExcerpt;
+
+        public NormalAnswerHolder(View view, RecyclerViewClickListener clickListener) {
+            super(view);
+            this.mClickListener = clickListener;
+            textViewName = (TextView) view.findViewById(R.id.tv_name);
+            textViewCount = (TextView) view.findViewById(R.id.tv_count);
+            textViewExcerpt = (TextView)view.findViewById(R.id.tv_excerpt);
+
+            itemView.setOnClickListener(this);
+        }
+
+
+        /**
+         * Click event.
+         *
+         * @param v
+         */
+        @Override
+        public void onClick(View v) {
+            if (mClickListener != null) {
+                mClickListener.onItemClick(v, getPosition());
+            }
+        }
+    }
+
+    class NormalAnswerWithDateHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private RecyclerViewClickListener mClickListener;
         private TextView textViewDate;
         private TextView textViewName;
         private TextView textViewCount;
+        private TextView textViewExcerpt;
+        private CardView cardView;
 
-        public RecyclerViewHolder(View view, RecyclerViewClickListener clickListener) {
+        public NormalAnswerWithDateHolder(View view, RecyclerViewClickListener clickListener) {
             super(view);
             this.mClickListener = clickListener;
-            imageViewPic = (ImageView) view.findViewById(R.id.iv_pic);
-
             textViewDate = (TextView) view.findViewById(R.id.tv_date);
             textViewName = (TextView) view.findViewById(R.id.tv_name);
             textViewCount = (TextView) view.findViewById(R.id.tv_count);
-            view.setOnClickListener(this);
+            textViewExcerpt = (TextView)view.findViewById(R.id.tv_excerpt);
+            cardView = (CardView)view.findViewById(R.id.cv_post);
+
+            cardView.setOnClickListener(this);
         }
 
 

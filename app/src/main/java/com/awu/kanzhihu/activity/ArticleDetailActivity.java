@@ -138,8 +138,8 @@ public class ArticleDetailActivity extends AppCompatActivity
             }
         });
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this,
-                DividerItemDecoration.VERTICAL_LIST));
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(this,
+//                DividerItemDecoration.VERTICAL_LIST));
 //        mRecyclerView.addOnItemTouchListener(new RecyclerViewItemTouch(this));
     }
 

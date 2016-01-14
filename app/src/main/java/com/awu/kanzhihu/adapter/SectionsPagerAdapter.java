@@ -3,11 +3,10 @@ package com.awu.kanzhihu.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.app.KZHApp;
-import com.awu.kanzhihu.fragment.ArticleFragment;
+import com.awu.kanzhihu.fragment.PostListFragment;
 import com.awu.kanzhihu.fragment.SettingFragment;
 import com.awu.kanzhihu.fragment.UserFragment;
 import com.awu.kanzhihu.util.Define;
@@ -19,13 +18,13 @@ import com.awu.kanzhihu.util.Define;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private static final String TAG = "SectionPagerAdataper";
 
-    private ArticleFragment articleFragment;
+    private PostListFragment postListFragment;
     private UserFragment userFragment;
     private SettingFragment settingFragment;
 
     public SectionsPagerAdapter(FragmentManager fm) {
         super(fm);
-        articleFragment = new ArticleFragment();
+        postListFragment = new PostListFragment();
         userFragment = new UserFragment();
         settingFragment = new SettingFragment();
     }
@@ -38,7 +37,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return articleFragment;
+                return postListFragment;
             case 1:
                 return userFragment;
             case 2:

@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -19,11 +18,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.awu.kanzhihu.R;
-import com.awu.kanzhihu.activity.ArticleDetailActivity;
 import com.awu.kanzhihu.activity.UserActivity;
-import com.awu.kanzhihu.adapter.RecyclerAdapter;
 import com.awu.kanzhihu.adapter.TopUserAdapter;
-import com.awu.kanzhihu.entity.Post;
 import com.awu.kanzhihu.entity.TopUser;
 import com.awu.kanzhihu.entity.TopUserAgree;
 import com.awu.kanzhihu.entity.TopUserAnswer;
@@ -37,8 +33,6 @@ import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.view.DividerItemDecoration;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import java.util.ArrayList;
 
 /**
  * Created by awu on 2015-12-15.
@@ -117,8 +111,8 @@ public class UserFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
-                DividerItemDecoration.VERTICAL_LIST));
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
+//                DividerItemDecoration.VERTICAL_LIST));
     }
 
     private void initMQueue() {

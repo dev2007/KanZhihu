@@ -1,6 +1,5 @@
 package com.awu.kanzhihu.fragment;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -21,26 +20,25 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.activity.ArticleDetailActivity;
-import com.awu.kanzhihu.adapter.RecyclerAdapter;
+import com.awu.kanzhihu.adapter.PostListAdapter;
 import com.awu.kanzhihu.entity.Post;
 import com.awu.kanzhihu.entity.PostsCollection;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.Define;
-import com.awu.kanzhihu.view.DividerItemDecoration;
 import com.google.gson.Gson;
 
 /**
  * Created by awu on 2015-12-15.
  */
-public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
+public class PostListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
         Response.Listener<String>,
         Response.ErrorListener {
-    private static final String TAG = "ArticleFragment";
+    private static final String TAG = "PostListFragment";
 
     private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
-    private RecyclerAdapter mAdapter;
+    private PostListAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private RequestQueue mQueue;
     private boolean isSwipeRefreshing = false;
@@ -48,7 +46,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private int oldestPublishTime = 0;
     private boolean loadNew = true;
 
-    public ArticleFragment() {
+    public PostListFragment() {
     }
 
     @Override
@@ -109,7 +107,7 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         if (mAdapter == null) {
-            mAdapter = new RecyclerAdapter(mQueue, new RecyclerViewClickListener() {
+            mAdapter = new PostListAdapter(mQueue, new RecyclerViewClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     Intent intent = new Intent(getActivity(), ArticleDetailActivity.class);
@@ -123,8 +121,8 @@ public class ArticleFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
 
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
-                DividerItemDecoration.VERTICAL_LIST));
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
+//                DividerItemDecoration.VERTICAL_LIST));
     }
 
     private void initMQueue() {

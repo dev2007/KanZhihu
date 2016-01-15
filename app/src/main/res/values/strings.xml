@@ -2,6 +2,7 @@
     <string name="app_name">看知乎</string>
     <string name="action_search">搜索用户</string>
     <string name="action_about">关于</string>
+    <string name="action_fav">收藏</string>
     <string name="action_exit">退出应用</string>
     <string name="section_article">热门文章</string>
     <string name="section_user">用户动态</string>
@@ -41,4 +42,6 @@
     <string name="text_count100rank">百赞</string>
     <string name="text_sorttitle">选择排序条件</string>
     <string name="text_search">搜索</string>
+    <string name="text_isfav">已收藏</string>
+    <string name="text_cacelfav">取消收藏</string>
 </resources>

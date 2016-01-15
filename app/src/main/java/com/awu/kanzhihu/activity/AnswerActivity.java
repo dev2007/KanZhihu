@@ -6,6 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -14,9 +17,11 @@ import android.webkit.WebView;
 import android.util.Log;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.bl.ActivityTouch;
+import com.awu.kanzhihu.util.DbUtil;
 import com.awu.kanzhihu.util.Define;
 
 public class AnswerActivity extends AppCompatActivity implements View.OnTouchListener {
@@ -26,6 +31,7 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
     private WebView mWebView;
     private String mUrl;
     private String mAnswerTitle;
+    private MenuItem menuItemFav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +58,33 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(0, android.R.anim.slide_out_right);
     }
 
-    private void setTitle(Intent intent){
-        if(intent != null){
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_answer, menu);
+        menuItemFav = menu.findItem(R.id.action_fav);
+        switchFavIcon(isFav());
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_fav) {
+            fav();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setTitle(Intent intent) {
+        if (intent != null) {
             mAnswerTitle = intent.getStringExtra(Define.KEY_ANSWER_TITLE);
             getSupportActionBar().setTitle(mAnswerTitle);
         }
@@ -66,6 +92,35 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
 
     private void initProgressBar() {
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar_answer);
+    }
+
+    private boolean isFav() {
+        boolean flag = false;
+        if (!TextUtils.isEmpty(mUrl))
+            flag = DbUtil.isFav(mUrl);
+        return flag;
+    }
+
+    private void switchFavIcon(boolean flag) {
+        if (flag) {
+            if (menuItemFav != null)
+                menuItemFav.setIcon(R.mipmap.ic_star_white);
+        } else {
+            if (menuItemFav != null)
+                menuItemFav.setIcon(R.mipmap.ic_star_border);
+        }
+    }
+
+    private void fav() {
+        if (isFav()) {
+            DbUtil.deleteFav(mUrl);
+            switchFavIcon(false);
+            Toast.makeText(this, R.string.text_cacelfav, Toast.LENGTH_SHORT).show();
+        } else {
+            DbUtil.insertFav(mUrl, mAnswerTitle);
+            switchFavIcon(true);
+            Toast.makeText(this, R.string.text_isfav, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -89,17 +144,18 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
 
         if (intent != null) {
             String shortUrl = intent.getStringExtra(Define.KEY_QUESTION_ANSWER);
-            if(shortUrl != null){
-                boolean isPost = intent.getBooleanExtra(Define.KEY_ISPOST,false);
-                if(isPost){
-                    mUrl = String.format("%s%s", Define.Url_Zhihu_ZhuanLan,shortUrl);
-                }else
-                    mUrl = String.format("%s%s", Define.Url_Zhihu,shortUrl);
-            }else {
+            if (shortUrl != null) {
+                boolean isPost = intent.getBooleanExtra(Define.KEY_ISPOST, false);
+                if (isPost) {
+                    mUrl = String.format("%s%s", Define.Url_Zhihu_ZhuanLan, shortUrl);
+                } else
+                    mUrl = String.format("%s%s", Define.Url_Zhihu, shortUrl);
+            } else {
                 String questionId = intent.getStringExtra(Define.KEY_QUESTIONID);
                 String answerId = intent.getStringExtra(Define.KEY_ANSWERID);
                 mUrl = String.format("%s/%s/answer/%s", Define.Url_Answer, questionId, answerId);
             }
+            switchFavIcon(isFav());
             Log.i(TAG, mUrl);
             mWebView.loadUrl(mUrl);
             mWebView.setWebViewClient(new WebViewClient() {
@@ -128,6 +184,6 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        return ActivityTouch.parentOnTouch(this,v,event);
+        return ActivityTouch.parentOnTouch(this, v, event);
     }
 }

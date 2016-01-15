@@ -9,13 +9,15 @@ import android.widget.TextView;
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.entity.Fav;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
+import com.awu.kanzhihu.util.DbUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by yoyo on 2016/1/15.
  */
-public class MyFavAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MyFavAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>implements ItemTouchHelperAdapter {
     private static final String TAG = "MyFavAdapter";
 
     private ArrayList<Fav> arrayList;
@@ -42,7 +44,7 @@ public class MyFavAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         FavViewHolder viewHolder = (FavViewHolder)holder;
-        viewHolder.textViewId.setText(""+(position+1));
+//        viewHolder.textViewId.setText(""+(position+1));//TODO:need change when swipe.
         viewHolder.textViewTitle.setText(arrayList.get(position).getName());
     }
 
@@ -60,6 +62,26 @@ public class MyFavAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public int getItemCount() {
         return arrayList.size();
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        Collections.swap(arrayList, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        final String url = arrayList.get(position).getUrl();
+        arrayList.remove(position);
+        notifyItemRemoved(position);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DbUtil.deleteFav(url);
+            }
+        }).start();
     }
 
     class FavViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

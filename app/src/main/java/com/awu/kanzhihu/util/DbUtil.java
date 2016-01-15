@@ -89,13 +89,13 @@ public class DbUtil {
         ArrayList<Fav> arrayList = new ArrayList<>();
         Cursor c = db.query(DT_FAV,null,null,null,null,null,null);
         if(c.moveToFirst()){
-            for(int i=0;i<c.getCount();i++){
-                c.move(i);
+            Log.i(TAG,"count:" + c.getCount());
+            do{
                 String url = c.getString(c.getColumnIndex(CN_URL));
                 String name = c.getString(c.getColumnIndex(CN_NAME));
                 Fav fav = new Fav(url,name);
                 arrayList.add(fav);
-            }
+            }while (c.moveToNext());
         }
         return arrayList;
     }

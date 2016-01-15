@@ -78,6 +78,11 @@ public class Define {
     public static final String KEY_QUESTION_ANSWER = "question_answer";
 
     /**
+     * Key for fav url.
+     */
+    public static final String KEY_FAV_URL = "fav_url";
+
+    /**
      * Key for answer title.
      */
     public static final String KEY_ANSWER_TITLE = "answertitle";

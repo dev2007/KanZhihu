@@ -40,8 +40,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return postListFragment;
             case 1:
                 return userFragment;
-            case 2:
-                return settingFragment;
+//            case 2:
+//                return settingFragment;
             default:
                 return null;
         }
@@ -50,7 +50,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // Show 3 total pages.
-        return 3;
+        return 2;
     }
 
     @Override
@@ -60,8 +60,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return KZHApp.appContext().getString(R.string.section_article);
             case 1:
                 return KZHApp.appContext().getString(R.string.section_user);
-            case 2:
-                return KZHApp.appContext().getString(R.string.section_setting);
+//            case 2:
+//                return KZHApp.appContext().getString(R.string.section_setting);
         }
         return null;
     }

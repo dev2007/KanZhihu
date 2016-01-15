@@ -6,6 +6,7 @@ import android.app.SearchableInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -142,6 +143,9 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             Log.i(TAG, "click setting.");
             return true;
+        }else if(id == R.id.action_stars){
+            Intent intent = new Intent(this,MyFavActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

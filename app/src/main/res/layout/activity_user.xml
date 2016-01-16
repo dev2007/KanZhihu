@@ -23,6 +23,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <com.makeramen.roundedimageview.RoundedImageView
@@ -41,7 +42,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:textColor="@color/colorWhite"
-                    android:textSize="20sp" />
+                    android:textSize="22sp" />
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 

@@ -34,6 +34,11 @@ public class Define {
     public static final String Url_Answer = "http://www.zhihu.com/question";
 
     /**
+     * url for user.
+     */
+    public static final String Url_User = "http://www.zhihu.com/people";
+
+    /**
      * url for check new post.
      */
     public static final String Url_CheckNew = "http://api.kanzhihu.com/checknew";

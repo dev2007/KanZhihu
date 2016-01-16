@@ -2,11 +2,14 @@ package com.awu.kanzhihu.activity;
 
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
@@ -43,6 +46,7 @@ public class UserActivity extends AppCompatActivity implements Response.Listener
     private String userName;
     private String avatarUrl;
     private String userHash;
+    private String mUserUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,7 @@ public class UserActivity extends AppCompatActivity implements Response.Listener
             userName = intent.getStringExtra(Define.KEY_USER_NAME);
             avatarUrl = intent.getStringExtra(Define.KEY_USER_AVATAR);
             userHash = intent.getStringExtra(Define.KEY_USER_HASH);
+            mUserUrl = String.format("%s/%s",Define.Url_User,userHash);
         }
     }
 
@@ -94,6 +99,25 @@ public class UserActivity extends AppCompatActivity implements Response.Listener
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(0, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_user, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_view) {
+            Uri uri = Uri.parse(mUserUrl);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void updateToolbar() {

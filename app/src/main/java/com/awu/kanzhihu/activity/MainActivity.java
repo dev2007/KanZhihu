@@ -141,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            Log.i(TAG, "click setting.");
+            Intent intent = new Intent(this,AboutActivity.class);
+            startActivity(intent);
             return true;
         }else if(id == R.id.action_stars){
             Intent intent = new Intent(this,MyFavActivity.class);

@@ -1,6 +1,7 @@
 package com.awu.kanzhihu.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,6 +29,7 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
     private static final String TAG = "AnswerActivity";
     private Toolbar mToolbar;
     private ProgressBar mProgressBar;
+    private FloatingActionButton mFloatingActionButton;
     private WebView mWebView;
     private String mUrl;
     private String mAnswerTitle;
@@ -78,6 +80,10 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
         if (id == R.id.action_fav) {
             fav();
             return true;
+        } else if (id == R.id.action_view) {
+            Uri uri = Uri.parse(mUrl);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -123,16 +129,17 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
         }
     }
 
-    /**
-     * TODO:next version,now NOT.
-     */
+
     private void initFloatingActionButton() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra("android.intent.extra.SUBJECT", String.format("「%s」", mAnswerTitle));
+                intent.putExtra("android.intent.extra.TEXT", mUrl);
+                startActivity(intent);
             }
         });
     }

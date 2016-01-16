@@ -44,7 +44,6 @@ public class MyFavAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>i
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         FavViewHolder viewHolder = (FavViewHolder)holder;
-//        viewHolder.textViewId.setText(""+(position+1));//TODO:need change when swipe.
         viewHolder.textViewTitle.setText(arrayList.get(position).getName());
     }
 
@@ -86,14 +85,12 @@ public class MyFavAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>i
 
     class FavViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private RecyclerViewClickListener mClickListener;
-        private TextView textViewId;
         private TextView textViewTitle;
 
         public FavViewHolder(View itemView, RecyclerViewClickListener clickListener) {
             super(itemView);
             this.mClickListener = clickListener;
             itemView.setOnClickListener(this);
-            textViewId = (TextView) itemView.findViewById(R.id.tv_id);
             textViewTitle = (TextView) itemView.findViewById(R.id.tv_title);
         }
 

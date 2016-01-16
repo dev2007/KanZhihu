@@ -8,4 +8,9 @@
         android:icon="@mipmap/ic_star_border"
         android:title="@string/action_fav"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_view"
+        android:icon="@mipmap/ic_launch_white"
+        android:title="@string/action_browser"
+        app:showAsAction="ifRoom" />
 </menu>

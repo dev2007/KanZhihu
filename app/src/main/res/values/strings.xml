@@ -54,4 +54,5 @@
     <string name="text_app_desc">每天三次，看知乎精选。既有长篇干货，也有一句话抖机灵；所有话题兼容并包，人文科技艺术体育职场情感都囊括其中；无添加剂的电脑筛选，不预设立场。如果你是知乎日报的读者或精选集的订阅者，希望你能在这里看到更多原汁原味的答案；如果你还是知乎社区的参与者，希望你除了阅读好答案，还能找到值得关注的人。
 </string>
     <string name="text_desc">本应用数据API来源于看知乎(www.kanzhihu.com)，所有内容均来源于知乎(www.zhihu.com)，本应用只提供相应知乎链接，不抓取、转发相关内容，版权归原作者所有。相关事宜请在知乎(www.zhihu.com)上联系原作者。</string>
+    <string name="umengkey">NTY5OTAyMzg2N2U1OGVhYWIwMDAwYzMw</string>
 </resources>

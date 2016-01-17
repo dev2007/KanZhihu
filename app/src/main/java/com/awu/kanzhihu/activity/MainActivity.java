@@ -26,6 +26,9 @@ import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.adapter.SectionsPagerAdapter;
 import com.awu.kanzhihu.util.CommonUtil;
 import com.awu.kanzhihu.util.Define;
+import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UpdateConfig;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -45,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
         initFloatingActionButton();
         initTabWithAdapter();
         CommonUtil.initMetric(this);
+        AnalyticsConfig.setAppkey(this, CommonUtil.DeBase64(getString(R.string.umengkey)));
+        UpdateConfig.setAppkey(CommonUtil.DeBase64(getString(R.string.umengkey)));
+        UmengUpdateAgent.update(this);
     }
 
     /**

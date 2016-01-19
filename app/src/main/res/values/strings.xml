@@ -55,4 +55,5 @@
 </string>
     <string name="text_desc">本应用数据API来源于看知乎(www.kanzhihu.com)，所有内容均来源于知乎(www.zhihu.com)，本应用只提供相应知乎链接，不抓取、转发相关内容，版权归原作者所有。相关事宜请在知乎(www.zhihu.com)上联系原作者。</string>
     <string name="umengkey">NTY5OTAyMzg2N2U1OGVhYWIwMDAwYzMw</string>
+    <string name="text_checkupdate">检查更新</string>
 </resources>

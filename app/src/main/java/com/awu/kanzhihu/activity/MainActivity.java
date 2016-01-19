@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         initTabWithAdapter();
         CommonUtil.initMetric(this);
         AnalyticsConfig.setAppkey(this, CommonUtil.DeBase64(getString(R.string.umengkey)));
-        UpdateConfig.setAppkey(CommonUtil.DeBase64(getString(R.string.umengkey)));
+        UmengUpdateAgent.setAppkey(CommonUtil.DeBase64(getString(R.string.umengkey)));
         UmengUpdateAgent.update(this);
     }
 

@@ -8,20 +8,24 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.awu.kanzhihu.R;
+import com.umeng.update.UmengUpdateAgent;
 
 public class AboutActivity extends AppCompatActivity {
     private static final String TAG = "AboutActivity";
     private Toolbar mToolbar;
     private TextView textViewVersion;
+    private Button buttonUpdate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         initToolbar();
         initData();
+        initUpdate();
     }
 
     private void initToolbar(){
@@ -49,6 +53,16 @@ public class AboutActivity extends AppCompatActivity {
         }catch (Exception e){
             textViewVersion.setText(R.string.text_noget_version);
         }
+    }
+
+    private void initUpdate(){
+        buttonUpdate = (Button)findViewById(R.id.btn_update);
+        buttonUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UmengUpdateAgent.forceUpdate(getApplicationContext());
+            }
+        });
     }
 
     private String getVersionName() throws Exception

@@ -62,4 +62,7 @@
     <string name="text_cacel">取消</string>
     <string name="title_activity_setting">设置</string>
     <string name="text_setting_appweb">使用应用内置浏览器</string>
+    <string name="text_firsthint">设置已保存，可在“关于”—“设置”中修改</string>
+    <string name="text_copyright">&#169;2016&#160;应用版权所有 Awu</string>
+    <string name="text_shareto">分享到</string>
 </resources>

@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             PreferenceUtil.write(Define.KEY_USEAPPWEB, true);
                             PreferenceUtil.write(Define.KEY_FIRSTUSE,false);
+                            hint();
                         }
                     })
                     .setNegativeButton(R.string.text_cacel, new DialogInterface.OnClickListener() {
@@ -177,10 +178,15 @@ public class MainActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             PreferenceUtil.write(Define.KEY_USEAPPWEB, false);
                             PreferenceUtil.write(Define.KEY_FIRSTUSE,false);
+                            hint();
                         }
                     })
                     .create();
             dialog.show();
         }
+    }
+
+    private void hint(){
+        Toast.makeText(this,R.string.text_firsthint,Toast.LENGTH_LONG).show();
     }
 }

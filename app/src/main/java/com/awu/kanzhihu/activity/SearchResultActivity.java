@@ -27,6 +27,7 @@ import com.awu.kanzhihu.entity.PostsCollection;
 import com.awu.kanzhihu.entity.SearchResult;
 import com.awu.kanzhihu.entity.SearchUser;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
+import com.awu.kanzhihu.util.CommonUtil;
 import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.view.DividerItemDecoration;
 import com.google.gson.Gson;
@@ -112,7 +113,7 @@ public class SearchResultActivity extends AppCompatActivity implements SwipeRefr
     }
 
     private void requestData() {
-        String url = String.format("%s/%s", Define.Url_Search, mQueryStr);
+        String url = String.format("%s/%s", Define.Url_Search, CommonUtil.UrlEncode(mQueryStr));
         StringRequest stringRequest = new StringRequest(url, this, this);
         Log.i(TAG, "url:" + url);
         mQueue.add(stringRequest);

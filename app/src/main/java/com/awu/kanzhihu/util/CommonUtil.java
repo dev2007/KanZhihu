@@ -5,6 +5,7 @@ import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -94,6 +95,14 @@ public class CommonUtil {
      */
     public static String DeBase64(String base64) {
         return new String(Base64.decode(base64, Base64.DEFAULT));
+    }
+
+    public static String UrlEncode(String params){
+        try {
+            return URLEncoder.encode(params, "UTF-8");
+        }catch (Exception e){
+            return "";
+        }
     }
 
 }

@@ -137,9 +137,8 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                intent.putExtra("android.intent.extra.SUBJECT", String.format("「%s」", mAnswerTitle));
-                intent.putExtra("android.intent.extra.TEXT", mUrl);
-                startActivity(intent);
+                intent.putExtra("android.intent.extra.TEXT", String.format("「%s」%s", mAnswerTitle, mUrl));
+                startActivity(Intent.createChooser(intent, getString(R.string.text_shareto)));
             }
         });
     }

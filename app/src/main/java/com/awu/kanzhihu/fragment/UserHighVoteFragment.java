@@ -1,6 +1,7 @@
 package com.awu.kanzhihu.fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import com.awu.kanzhihu.entity.UserDetails;
 import com.awu.kanzhihu.entity.UserTopAnswer;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.Define;
+import com.awu.kanzhihu.util.PreferenceUtil;
 import com.awu.kanzhihu.view.DividerItemDecoration;
 
 import java.util.ArrayList;
@@ -50,11 +52,22 @@ public class UserHighVoteFragment extends Fragment implements IUserFragment {
                 public void onItemClick(View view, int position) {
                     UserTopAnswer answer = mAdapter.getTopAnswer(position);
                     if (answer != null) {
-                        Intent intent = new Intent(getActivity(), AnswerActivity.class);
-                        intent.putExtra(Define.KEY_ANSWER_TITLE, answer.getTitle());
-                        intent.putExtra(Define.KEY_QUESTION_ANSWER, answer.getLink());
-                        intent.putExtra(Define.KEY_ISPOST,answer.ispost());
-                        startActivity(intent);
+                        if ((boolean) PreferenceUtil.read(Define.KEY_USEAPPWEB, false)) {
+                            Intent intent = new Intent(getActivity(), AnswerActivity.class);
+                            intent.putExtra(Define.KEY_ANSWER_TITLE, answer.getTitle());
+                            intent.putExtra(Define.KEY_QUESTION_ANSWER, answer.getLink());
+                            intent.putExtra(Define.KEY_ISPOST, answer.ispost());
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            String url;
+                            if (answer.ispost()) {
+                                url = String.format("%s%s", Define.Url_Zhihu_ZhuanLan, answer.getLink());
+                            } else
+                                url = String.format("%s%s", Define.Url_Zhihu, answer.getLink());
+                            intent.setData(Uri.parse(url));
+                            startActivity(intent);
+                        }
                     }
                 }
             });

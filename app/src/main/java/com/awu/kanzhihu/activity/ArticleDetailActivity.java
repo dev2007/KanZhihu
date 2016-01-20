@@ -2,6 +2,7 @@ package com.awu.kanzhihu.activity;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,6 +32,7 @@ import com.awu.kanzhihu.entity.AnswerCollection;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.CommonUtil;
 import com.awu.kanzhihu.util.Define;
+import com.awu.kanzhihu.util.PreferenceUtil;
 import com.awu.kanzhihu.view.DividerItemDecoration;
 import com.google.gson.Gson;
 
@@ -124,16 +126,25 @@ public class ArticleDetailActivity extends AppCompatActivity
                 if (view instanceof ImageView) {
                     Intent intent = new Intent(getApplicationContext(), UserActivity.class);
                     intent.putExtra(Define.KEY_USER_HASH, answer.getAuthorhash());
-                    intent.putExtra(Define.KEY_USER_AVATAR,answer.getAvatar());
-                    intent.putExtra(Define.KEY_USER_NAME,answer.getAuthorname());
+                    intent.putExtra(Define.KEY_USER_AVATAR, answer.getAvatar());
+                    intent.putExtra(Define.KEY_USER_NAME, answer.getAuthorname());
                     startActivity(intent);
                 } else {
                     if (answer == null) return;
-                    Intent intent = new Intent(getApplicationContext(), AnswerActivity.class);
-                    intent.putExtra(Define.KEY_QUESTIONID, answer.getQuestionid());
-                    intent.putExtra(Define.KEY_ANSWERID, answer.getAnswerid());
-                    intent.putExtra(Define.KEY_ANSWER_TITLE, answer.getTitle());
-                    startActivity(intent);
+                    Log.i(TAG,""+PreferenceUtil.read(Define.KEY_USEAPPWEB, false));
+                    if ((boolean) PreferenceUtil.read(Define.KEY_USEAPPWEB, false)) {
+                        Intent intent = new Intent(getApplicationContext(), AnswerActivity.class);
+                        intent.putExtra(Define.KEY_QUESTIONID, answer.getQuestionid());
+                        intent.putExtra(Define.KEY_ANSWERID, answer.getAnswerid());
+                        intent.putExtra(Define.KEY_ANSWER_TITLE, answer.getTitle());
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        String url = String.format("%s/%s/answer/%s", Define.Url_Answer,
+                                answer.getQuestionid(), answer.getAnswerid());
+                        intent.setData(Uri.parse(url));
+                        startActivity(intent);
+                    }
                 }
             }
         });

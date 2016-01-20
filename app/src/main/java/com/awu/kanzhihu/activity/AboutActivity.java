@@ -1,5 +1,6 @@
 package com.awu.kanzhihu.activity;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ public class AboutActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private TextView textViewVersion;
     private Button buttonUpdate;
+    private Button buttonSetting;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +28,7 @@ public class AboutActivity extends AppCompatActivity {
         initToolbar();
         initData();
         initUpdate();
+        initSetting();
     }
 
     private void initToolbar(){
@@ -61,6 +64,17 @@ public class AboutActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 UmengUpdateAgent.forceUpdate(getApplicationContext());
+            }
+        });
+    }
+
+    private void initSetting(){
+        buttonSetting = (Button)findViewById(R.id.btn_setting);
+        buttonSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),SettingActivity.class);
+                startActivity(intent);
             }
         });
     }

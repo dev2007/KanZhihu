@@ -1,6 +1,7 @@
 package com.awu.kanzhihu.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +28,7 @@ import com.awu.kanzhihu.entity.Post;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.DbUtil;
 import com.awu.kanzhihu.util.Define;
+import com.awu.kanzhihu.util.PreferenceUtil;
 
 import java.util.ArrayList;
 
@@ -39,20 +41,20 @@ public class MyFavActivity extends AppCompatActivity implements SwipeRefreshLayo
     private MyFavAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private boolean isSwipeRefreshing = false;
-    private  ItemTouchHelper itemTouchHelper;
+    private ItemTouchHelper itemTouchHelper;
     private ArrayList<Fav> mData = new ArrayList<>();
     private static final int MSG_OK = 1;
-    private Handler noticeHandler = new Handler(){
+    private Handler noticeHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case MSG_OK:
-                    Log.i(TAG,"get ok");
+                    Log.i(TAG, "get ok");
                     stopRefresh();
                     mAdapter.bindData(mData);
                     mAdapter.notifyDataSetChanged();
-                    if(mData.size() == 0){
-                        Toast.makeText(getApplicationContext(),R.string.hint_nofav,Toast.LENGTH_LONG).show();
+                    if (mData.size() == 0) {
+                        Toast.makeText(getApplicationContext(), R.string.hint_nofav, Toast.LENGTH_LONG).show();
                     }
                     break;
                 default:
@@ -105,15 +107,21 @@ public class MyFavActivity extends AppCompatActivity implements SwipeRefreshLayo
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         if (mAdapter == null) {
-            mAdapter = new MyFavAdapter(mData,new RecyclerViewClickListener() {
+            mAdapter = new MyFavAdapter(mData, new RecyclerViewClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     Fav fav = mAdapter.getFav(position);
                     if (fav != null) {
-                        Intent intent = new Intent(getApplicationContext(), AnswerActivity.class);
-                        intent.putExtra(Define.KEY_ANSWER_TITLE, fav.getName());
-                        intent.putExtra(Define.KEY_FAV_URL, fav.getUrl());
-                        startActivity(intent);
+                        if ((boolean) PreferenceUtil.read(Define.KEY_USEAPPWEB, false)) {
+                            Intent intent = new Intent(getApplicationContext(), AnswerActivity.class);
+                            intent.putExtra(Define.KEY_ANSWER_TITLE, fav.getName());
+                            intent.putExtra(Define.KEY_FAV_URL, fav.getUrl());
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(fav.getUrl()));
+                            startActivity(intent);
+                        }
                     }
                 }
             });

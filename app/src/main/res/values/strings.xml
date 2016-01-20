@@ -8,7 +8,7 @@
     <string name="action_exit">退出应用</string>
     <string name="section_article">热门文章</string>
     <string name="section_user">用户动态</string>
-    <string name="section_setting">设置</string>
+    <string name="text_setting">设置</string>
     <string name="hint_search">请输入用户名称或ID</string>
     <string name="hint_refresh">加载失败，请下拉刷新</string>
     <string name="hint_pushrefresh">加载失败，请上拉刷新</string>
@@ -56,4 +56,10 @@
     <string name="text_desc">本应用数据API来源于看知乎(www.kanzhihu.com)，所有内容均来源于知乎(www.zhihu.com)，本应用只提供相应知乎链接，不抓取、转发相关内容，版权归原作者所有。相关事宜请在知乎(www.zhihu.com)上联系原作者。</string>
     <string name="umengkey">NTY5OTAyMzg2N2U1OGVhYWIwMDAwYzMw</string>
     <string name="text_checkupdate">检查更新</string>
+    <string name="text_firstsetting">浏览设置</string>
+    <string name="text_first_message">是否在应用内浏览知乎链接？\n\n确定 使用应用内浏览器\n取消 使用手机浏览器</string>
+    <string name="text_ok">确定</string>
+    <string name="text_cacel">取消</string>
+    <string name="title_activity_setting">设置</string>
+    <string name="text_setting_appweb">使用应用内置浏览器</string>
 </resources>

@@ -26,6 +26,7 @@ import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.adapter.SectionsPagerAdapter;
 import com.awu.kanzhihu.util.CommonUtil;
 import com.awu.kanzhihu.util.Define;
+import com.awu.kanzhihu.util.PreferenceUtil;
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UpdateConfig;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         initToolbar();
         initFloatingActionButton();
         initTabWithAdapter();
+        showSettingDialog();
         CommonUtil.initMetric(this);
         AnalyticsConfig.setAppkey(this, CommonUtil.DeBase64(getString(R.string.umengkey)));
         UmengUpdateAgent.setAppkey(CommonUtil.DeBase64(getString(R.string.umengkey)));
@@ -156,5 +158,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showSettingDialog(){
+        if((boolean)PreferenceUtil.read(Define.KEY_FIRSTUSE,true)) {
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.text_firstsetting)
+                    .setMessage(R.string.text_first_message)
+                    .setPositiveButton(R.string.text_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PreferenceUtil.write(Define.KEY_USEAPPWEB, true);
+                            PreferenceUtil.write(Define.KEY_FIRSTUSE,false);
+                        }
+                    })
+                    .setNegativeButton(R.string.text_cacel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PreferenceUtil.write(Define.KEY_USEAPPWEB, false);
+                            PreferenceUtil.write(Define.KEY_FIRSTUSE,false);
+                        }
+                    })
+                    .create();
+            dialog.show();
+        }
     }
 }

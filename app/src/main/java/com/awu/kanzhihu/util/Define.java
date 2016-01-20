@@ -122,6 +122,16 @@ public class Define {
      */
     public static final String KEY_ISPOST = "zhuanlan";
 
+    /**
+     * Key for first use the app.
+     */
+    public static final String KEY_FIRSTUSE = "isfirstuse";
+
+    /**
+     * Key for user app's webview.
+     */
+    public static final String KEY_USEAPPWEB = "isuseappweb";
+
 
     public static String paramName(int value) {
         switch (value) {

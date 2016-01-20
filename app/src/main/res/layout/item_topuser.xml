@@ -51,7 +51,8 @@
         android:layout_below="@+id/tv_name"
         android:layout_marginLeft="@dimen/view_margin"
         android:layout_toLeftOf="@+id/ll_right"
-        android:layout_toRightOf="@+id/iv_avatar" />
+        android:layout_toRightOf="@+id/iv_avatar"
+        android:textColor="@color/colorGray"/>
 
     <LinearLayout
         android:id="@+id/ll_right"

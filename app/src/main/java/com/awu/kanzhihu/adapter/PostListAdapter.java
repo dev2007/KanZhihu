@@ -88,7 +88,7 @@ public class PostListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             String name = Define.PostName.getDisplay(post.getName());
             viewHolder.textViewName.setText(name);
 
-            String countStr = String.format("%d%s", post.getCount(), KZHApp.appContext().getString(R.string.text_articlecount));
+            String countStr = String.format("%d%s", post.getCount(), KZHApp.getContext().getString(R.string.text_articlecount));
             viewHolder.textViewCount.setText(countStr);
             viewHolder.textViewExcerpt.setText(post.getExcerpt());
         }else if(holder instanceof  NormalAnswerWithDateHolder){
@@ -100,7 +100,7 @@ public class PostListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             String name = Define.PostName.getDisplay(post.getName());
             viewHolder.textViewName.setText(name);
 
-            String countStr = String.format("%d%s", post.getCount(), KZHApp.appContext().getString(R.string.text_articlecount));
+            String countStr = String.format("%d%s", post.getCount(), KZHApp.getContext().getString(R.string.text_articlecount));
             viewHolder.textViewCount.setText(countStr);
             viewHolder.textViewExcerpt.setText(post.getExcerpt());
         }

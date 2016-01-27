@@ -31,11 +31,16 @@ import com.awu.kanzhihu.util.CommonUtil;
 import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.view.DividerItemDecoration;
 import com.google.gson.Gson;
+import com.umeng.analytics.MobclickAgent;
 
-public class SearchResultActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, Response.Listener<String>,
+import awu.com.awutil.LogUtil;
+
+/**
+ * SearchResultActivity.
+ */
+public class SearchResultActivity extends BaseActivity
+        implements SwipeRefreshLayout.OnRefreshListener, Response.Listener<String>,
         Response.ErrorListener {
-    private static final String TAG = "SearchResultActivity";
-    private Toolbar mToolbar;
     private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -48,24 +53,12 @@ public class SearchResultActivity extends AppCompatActivity implements SwipeRefr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
-        initToolBar();
+        initToolbarNavigation();
         initQueue();
         initProgressBar();
         initSwipeRefreshLayout();
         initRecyclerView();
         handleIntent(getIntent());
-    }
-
-    private void initToolBar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
     }
 
     private void initProgressBar() {
@@ -84,11 +77,11 @@ public class SearchResultActivity extends AppCompatActivity implements SwipeRefr
         mAdapter = new SearchResultAdapter(mQueue, new RecyclerViewClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                SearchUser user =  mAdapter.getData(position);
+                SearchUser user = mAdapter.getData(position);
                 Intent intent = new Intent(view.getContext(), UserActivity.class);
                 intent.putExtra(Define.KEY_USER_HASH, user.getHash());
-                intent.putExtra(Define.KEY_USER_AVATAR,user.getAvatar());
-                intent.putExtra(Define.KEY_USER_NAME,user.getName());
+                intent.putExtra(Define.KEY_USER_AVATAR, user.getAvatar());
+                intent.putExtra(Define.KEY_USER_NAME, user.getName());
                 startActivity(intent);
             }
         });
@@ -97,11 +90,6 @@ public class SearchResultActivity extends AppCompatActivity implements SwipeRefr
 //                DividerItemDecoration.VERTICAL_LIST));
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(0, android.R.anim.slide_out_right);
-    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -115,7 +103,7 @@ public class SearchResultActivity extends AppCompatActivity implements SwipeRefr
     private void requestData() {
         String url = String.format("%s/%s", Define.Url_Search, CommonUtil.UrlEncode(mQueryStr));
         StringRequest stringRequest = new StringRequest(url, this, this);
-        Log.i(TAG, "url:" + url);
+        LogUtil.d(this, "url:" + url);
         mQueue.add(stringRequest);
     }
 
@@ -123,7 +111,7 @@ public class SearchResultActivity extends AppCompatActivity implements SwipeRefr
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            Log.i(TAG, "query:" + query);
+            LogUtil.d(this, "query:" + query);
             mQueryStr = query;
             getSupportActionBar().setTitle(getString(R.string.text_search) + ":" + query);
             requestData();
@@ -134,9 +122,9 @@ public class SearchResultActivity extends AppCompatActivity implements SwipeRefr
     @Override
     public void onErrorResponse(VolleyError error) {
         if (error != null && error.getMessage() != null)
-            Log.i(TAG, error.getMessage());
+            LogUtil.d(this, error.getMessage());
         else
-            Log.i(TAG, "i don't know what happen.");
+            LogUtil.d(this, "i don't know what happen.");
         stopRefresh();
         Toast.makeText(this, R.string.hint_refresh, Toast.LENGTH_LONG).show();
     }
@@ -146,7 +134,7 @@ public class SearchResultActivity extends AppCompatActivity implements SwipeRefr
         Gson gson = new Gson();
         SearchResult collection = gson.fromJson(response, SearchResult.class);
         if (!collection.getError().equals("")) {
-            Log.i(TAG, "Response Error:" + collection.getError());
+            LogUtil.d(this, "Response Error:" + collection.getError());
             return;
         }
         mAdapter.bindData(collection.getUsers());
@@ -164,11 +152,23 @@ public class SearchResultActivity extends AppCompatActivity implements SwipeRefr
     @Override
     public void onRefresh() {
         if (!isSwipeRefreshing) {
-            Log.i(TAG,"refresh");
+            LogUtil.d(this, "refresh");
             isSwipeRefreshing = true;
             requestData();
-        }else{
-            Log.i(TAG,"repeat refresh");
+        } else {
+            LogUtil.d(this, "repeat refresh");
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        MobclickAgent.onPause(this);
     }
 }

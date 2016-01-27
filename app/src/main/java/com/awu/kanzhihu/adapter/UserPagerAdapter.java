@@ -62,11 +62,11 @@ public class UserPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return KZHApp.appContext().getString(R.string.section_userhighvote);
+                return KZHApp.getContext().getString(R.string.section_userhighvote);
             case 1:
-                return KZHApp.appContext().getString(R.string.section_userdetail);
+                return KZHApp.getContext().getString(R.string.section_userdetail);
             case 2:
-                return KZHApp.appContext().getString(R.string.section_userqxz);
+                return KZHApp.getContext().getString(R.string.section_userqxz);
         }
         return null;
     }

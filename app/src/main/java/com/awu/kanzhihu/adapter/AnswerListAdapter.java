@@ -65,7 +65,7 @@ public class AnswerListAdapter extends RecyclerView.Adapter<AnswerListAdapter.An
     @Override
     public AnswerListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         AnswerListHolder holder = new AnswerListHolder(
-                LayoutInflater.from(KZHApp.appContext()).inflate(R.layout.item_answer, parent, false),
+                LayoutInflater.from(KZHApp.getContext()).inflate(R.layout.item_answer, parent, false),
                 mClickListener);
         return holder;
     }

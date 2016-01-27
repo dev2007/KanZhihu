@@ -28,18 +28,34 @@ import com.awu.kanzhihu.util.CommonUtil;
 import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.util.PreferenceUtil;
 import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
-import com.umeng.update.UpdateConfig;
 
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
-    //fragmentpageradapter object.
+/**
+ * Application entry point & main function activity.
+ */
+public class MainActivity extends BaseActivity {
+    /**
+     * Fragment pager adapter.
+     */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    // tablayout's viewpager.
+    /**
+     * TabLayout's viewpager.
+     */
     private ViewPager mViewPager;
     private FloatingActionButton fab;
+    /**
+     * SearchView
+     */
     private SearchView mSearchView;
+    /**
+     * MenuItem for search.
+     */
     private MenuItem mSearchItem;
+    /**
+     * TabLayout.
+     */
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,18 +69,11 @@ public class MainActivity extends AppCompatActivity {
         AnalyticsConfig.setAppkey(this, CommonUtil.DeBase64(getString(R.string.umengkey)));
         UmengUpdateAgent.setAppkey(CommonUtil.DeBase64(getString(R.string.umengkey)));
         UmengUpdateAgent.update(this);
+        MobclickAgent.updateOnlineConfig(this);
     }
 
     /**
-     * initialize toolbar
-     */
-    private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-    }
-
-    /**
-     * initialize TabLayout & ViewPager & ViewPager's FragmentPagerAdapter
+     * Initialize TabLayout & ViewPager & ViewPager's FragmentPagerAdapter
      */
     private void initTabWithAdapter() {
         // Create the adapter that will return a fragment for each of the three
@@ -98,10 +107,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
     }
 
+    /**
+     * Initialize FloatingActionButton.
+     */
     private void initFloatingActionButton() {
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +146,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Initialize SearchView and add searchableInfo.
+     */
     private void initSearchView() {
         mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
 
@@ -149,19 +164,22 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this,AboutActivity.class);
+            Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
             return true;
-        }else if(id == R.id.action_stars){
-            Intent intent = new Intent(this,MyFavActivity.class);
+        } else if (id == R.id.action_stars) {
+            Intent intent = new Intent(this, MyFavActivity.class);
             startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void showSettingDialog(){
-        if((boolean)PreferenceUtil.read(Define.KEY_FIRSTUSE,true)) {
+    /**
+     * Initialize first-use ShowDialog.
+     */
+    private void showSettingDialog() {
+        if ((boolean) PreferenceUtil.read(Define.KEY_FIRSTUSE, true)) {
             AlertDialog dialog = new AlertDialog.Builder(this)
                     .setTitle(R.string.text_firstsetting)
                     .setMessage(R.string.text_first_message)
@@ -169,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             PreferenceUtil.write(Define.KEY_USEAPPWEB, true);
-                            PreferenceUtil.write(Define.KEY_FIRSTUSE,false);
+                            PreferenceUtil.write(Define.KEY_FIRSTUSE, false);
                             hint();
                         }
                     })
@@ -177,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             PreferenceUtil.write(Define.KEY_USEAPPWEB, false);
-                            PreferenceUtil.write(Define.KEY_FIRSTUSE,false);
+                            PreferenceUtil.write(Define.KEY_FIRSTUSE, false);
                             hint();
                         }
                     })
@@ -186,7 +204,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void hint(){
-        Toast.makeText(this,R.string.text_firsthint,Toast.LENGTH_LONG).show();
+    /**
+     * First setting hint.
+     */
+    private void hint() {
+        Toast.makeText(this, R.string.text_firsthint, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        MobclickAgent.onPause(this);
     }
 }

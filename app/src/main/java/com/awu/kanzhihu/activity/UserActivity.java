@@ -32,10 +32,12 @@ import com.awu.kanzhihu.util.CommonUtil;
 import com.awu.kanzhihu.util.Define;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.umeng.analytics.MobclickAgent;
 
-public class UserActivity extends AppCompatActivity implements Response.Listener<String>, Response.ErrorListener {
-    private static final String TAG = "UserActivity";
-    private Toolbar mToolbar;
+import awu.com.awutil.LogUtil;
+
+public class UserActivity extends BaseActivity
+        implements Response.Listener<String>, Response.ErrorListener {
     private TabLayout mTabLayout;
     //fragmentpageradapter object.
     private UserPagerAdapter mUserPagerAdapter;
@@ -53,7 +55,7 @@ public class UserActivity extends AppCompatActivity implements Response.Listener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
         getIntentData();
-        initToolbar();
+        initToolbarNavigation();
         initQueue();
         updateToolbar();
         initTabLayout();
@@ -78,27 +80,6 @@ public class UserActivity extends AppCompatActivity implements Response.Listener
 
     private void initQueue() {
         mQueue = Volley.newRequestQueue(this);
-    }
-
-    /**
-     * initialize toolbar
-     */
-    private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(0, android.R.anim.slide_out_right);
     }
 
     @Override
@@ -164,7 +145,7 @@ public class UserActivity extends AppCompatActivity implements Response.Listener
 
     private void requestData() {
         String url = String.format("%s/%s", Define.Url_UserDetail, userHash);
-        Log.i(TAG, url);
+        LogUtil.d(this, url);
         StringRequest stringRequest = new StringRequest(url, this, this);
         mQueue.add(stringRequest);
     }
@@ -172,9 +153,9 @@ public class UserActivity extends AppCompatActivity implements Response.Listener
     @Override
     public void onErrorResponse(VolleyError error) {
         if (error != null && error.getMessage() != null)
-            Log.i(TAG, error.getMessage());
+            LogUtil.i(this, error.getMessage());
         else
-            Log.i(TAG, "i don't know what happen.");
+            LogUtil.i(this, "i don't know what happen.");
         Toast.makeText(this, getString(R.string.hint_loaderror), Toast.LENGTH_SHORT).show();
         stopRefresh();
     }
@@ -185,14 +166,14 @@ public class UserActivity extends AppCompatActivity implements Response.Listener
             Gson gson = new Gson();
             UserDetails userDetails = gson.fromJson(response, UserDetails.class);
             if (!userDetails.getError().equals("")) {
-                Log.i(TAG, "response had error msg:" + userDetails.getError());
+                LogUtil.i(this, "response had error msg:" + userDetails.getError());
                 Toast.makeText(this, getString(R.string.hint_loaderror), Toast.LENGTH_SHORT).show();
             } else {
-                Log.i(TAG, "response ok");
+                LogUtil.i(this, "response ok");
                 mUserPagerAdapter.bindData(userDetails);
             }
         } else {
-            Log.i(TAG, "response error");
+            LogUtil.i(this, "response error");
             Toast.makeText(this, getString(R.string.hint_loaderror), Toast.LENGTH_SHORT).show();
         }
         stopRefresh();
@@ -202,5 +183,17 @@ public class UserActivity extends AppCompatActivity implements Response.Listener
         mProgressBar.setVisibility(View.GONE);
         mTabLayout.setVisibility(View.VISIBLE);
         mViewPager.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        MobclickAgent.onPause(this);
     }
 }

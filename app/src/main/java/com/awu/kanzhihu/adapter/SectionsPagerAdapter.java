@@ -57,9 +57,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return KZHApp.appContext().getString(R.string.section_article);
+                return KZHApp.getContext().getString(R.string.section_article);
             case 1:
-                return KZHApp.appContext().getString(R.string.section_user);
+                return KZHApp.getContext().getString(R.string.section_user);
 //            case 2:
 //                return KZHApp.appContext().getString(R.string.section_setting);
         }

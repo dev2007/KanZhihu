@@ -12,48 +12,44 @@ import android.widget.CompoundButton;
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.util.PreferenceUtil;
+import com.umeng.analytics.MobclickAgent;
 
-public class SettingActivity extends AppCompatActivity {
-    private static final String TAG = "SettingActivity";
-    private Toolbar mToolbar;
+/**
+ * SettingActivity.
+ */
+public class SettingActivity extends BaseActivity {
     private CheckBox checkBoxAppWeb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        initToolbar();
+        initToolbarNavigation();
         initSetting();
     }
 
-    private void initToolbar(){
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+    private void initSetting(){
+        checkBoxAppWeb = (CheckBox)findViewById(R.id.cb_appweb);
+        checkBoxAppWeb.setChecked((boolean) PreferenceUtil.read(Define.KEY_USEAPPWEB, false));
+
+        checkBoxAppWeb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                onBackPressed();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                PreferenceUtil.write(Define.KEY_USEAPPWEB, isChecked);
             }
         });
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(0, android.R.anim.slide_out_right);
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
     }
 
-    private void initSetting(){
-        checkBoxAppWeb = (CheckBox)findViewById(R.id.cb_appweb);
-        checkBoxAppWeb.setChecked((boolean)PreferenceUtil.read(Define.KEY_USEAPPWEB,false));
-
-        checkBoxAppWeb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                PreferenceUtil.write(Define.KEY_USEAPPWEB,isChecked);
-            }
-        });
+    @Override
+    public void onStop() {
+        super.onStop();
+        MobclickAgent.onPause(this);
     }
 
 }

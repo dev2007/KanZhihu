@@ -40,7 +40,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     @Override
     public SearchResultHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         SearchResultHolder holder = new SearchResultHolder(
-                LayoutInflater.from(KZHApp.appContext()).inflate(R.layout.item_searchresult,
+                LayoutInflater.from(KZHApp.getContext()).inflate(R.layout.item_searchresult,
                         parent, false), mClickListener);
         return holder;
     }
@@ -51,9 +51,9 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         loadPicture(user.getAvatar(), holder.imageView);
         holder.textViewName.setText(user.getName() + "(" + user.getId() + ")");
         holder.textViewSignature.setText(user.getSignature());
-        holder.textViewAgree.setText(KZHApp.appContext().getString(R.string.text_agree) + user.getAgree());
-        holder.textViewAnswer.setText(KZHApp.appContext().getString(R.string.text_answer) + user.getAnswer());
-        holder.textViewFollower.setText(KZHApp.appContext().getString(R.string.text_follower) + user.getFollower());
+        holder.textViewAgree.setText(KZHApp.getContext().getString(R.string.text_agree) + user.getAgree());
+        holder.textViewAnswer.setText(KZHApp.getContext().getString(R.string.text_answer) + user.getAnswer());
+        holder.textViewFollower.setText(KZHApp.getContext().getString(R.string.text_follower) + user.getFollower());
     }
 
     @Override

@@ -24,10 +24,11 @@ import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.bl.ActivityTouch;
 import com.awu.kanzhihu.util.DbUtil;
 import com.awu.kanzhihu.util.Define;
+import com.umeng.analytics.MobclickAgent;
 
-public class AnswerActivity extends AppCompatActivity implements View.OnTouchListener {
-    private static final String TAG = "AnswerActivity";
-    private Toolbar mToolbar;
+import awu.com.awutil.LogUtil;
+
+public class AnswerActivity extends BaseActivity {
     private ProgressBar mProgressBar;
     private FloatingActionButton mFloatingActionButton;
     private WebView mWebView;
@@ -40,29 +41,11 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer);
         Intent intent = getIntent();
-        initToolbar();
+        initToolbarNavigation();
         setTitle(intent);
         initFloatingActionButton();
         initProgressBar();
         initWebView(intent);
-    }
-
-    private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(0, android.R.anim.slide_out_right);
     }
 
     @Override
@@ -78,7 +61,7 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
         int id = item.getItemId();
 
         if (id == R.id.action_fav) {
-            fav();
+            favHint();
             return true;
         } else if (id == R.id.action_view) {
             Uri uri = Uri.parse(mUrl);
@@ -89,6 +72,10 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Set toolbar title.
+     * @param intent
+     */
     private void setTitle(Intent intent) {
         if (intent != null) {
             mAnswerTitle = intent.getStringExtra(Define.KEY_ANSWER_TITLE);
@@ -96,10 +83,17 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
         }
     }
 
+    /**
+     * Initialize progressbar.
+     */
     private void initProgressBar() {
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar_answer);
     }
 
+    /**
+     * If current answer is user's favorite.
+     * @return True,if it is.
+     */
     private boolean isFav() {
         boolean flag = false;
         if (!TextUtils.isEmpty(mUrl))
@@ -107,6 +101,10 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
         return flag;
     }
 
+    /**
+     * Switch fav icon displaying.
+     * @param flag
+     */
     private void switchFavIcon(boolean flag) {
         if (flag) {
             if (menuItemFav != null)
@@ -117,7 +115,10 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
         }
     }
 
-    private void fav() {
+    /**
+     * Hint for click fav icon.
+     */
+    private void favHint() {
         if (isFav()) {
             DbUtil.deleteFav(mUrl);
             switchFavIcon(false);
@@ -130,6 +131,9 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
     }
 
 
+    /**
+     * Initialize FloatingActionButton.
+     */
     private void initFloatingActionButton() {
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -143,6 +147,10 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
         });
     }
 
+    /**
+     * Initialize WebView.
+     * @param intent
+     */
     private void initWebView(Intent intent) {
         mWebView = (WebView) findViewById(R.id.wv);
         WebSettings settings = mWebView.getSettings();
@@ -151,21 +159,22 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
         if (intent != null) {
             String shortUrl = intent.getStringExtra(Define.KEY_QUESTION_ANSWER);
             String favUrl = intent.getStringExtra(Define.KEY_FAV_URL);
+            //is full link.
             if (shortUrl != null) {
                 boolean isPost = intent.getBooleanExtra(Define.KEY_ISPOST, false);
                 if (isPost) {
                     mUrl = String.format("%s%s", Define.Url_Zhihu_ZhuanLan, shortUrl);
                 } else
                     mUrl = String.format("%s%s", Define.Url_Zhihu, shortUrl);
-            } else if (favUrl != null) {
+            } else if (favUrl != null) {//is fav.
                 mUrl = favUrl;
-            } else {
+            } else {//is separate url.
                 String questionId = intent.getStringExtra(Define.KEY_QUESTIONID);
                 String answerId = intent.getStringExtra(Define.KEY_ANSWERID);
                 mUrl = String.format("%s/%s/answer/%s", Define.Url_Answer, questionId, answerId);
             }
             switchFavIcon(isFav());
-            Log.i(TAG, mUrl);
+            LogUtil.d(this,mUrl);
             mWebView.loadUrl(mUrl);
             mWebView.setWebViewClient(new WebViewClient() {
                 @Override
@@ -179,7 +188,7 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
                 @Override
                 public void onProgressChanged(WebView view, int newProgress) {
                     if (newProgress == 100) {
-                        Log.i(TAG, "url load ok");
+                        LogUtil.d(this,"url load ok");
                         if (mProgressBar.getVisibility() == View.VISIBLE) {
                             mProgressBar.setVisibility(View.GONE);
                             mWebView.setVisibility(View.VISIBLE);
@@ -187,12 +196,19 @@ public class AnswerActivity extends AppCompatActivity implements View.OnTouchLis
                     }
                 }
             });
-//            mWebView.setOnTouchListener(this);
         }
     }
 
+
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        return ActivityTouch.parentOnTouch(this, v, event);
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        MobclickAgent.onPause(this);
     }
 }

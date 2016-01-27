@@ -29,12 +29,16 @@ import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.DbUtil;
 import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.util.PreferenceUtil;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
-public class MyFavActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
-    private static final String TAG = "MyFavActivity";
-    private Toolbar mToolbar;
+import awu.com.awutil.LogUtil;
+
+/**
+ * MyFavActivity.
+ */
+public class MyFavActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
     private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -49,7 +53,7 @@ public class MyFavActivity extends AppCompatActivity implements SwipeRefreshLayo
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_OK:
-                    Log.i(TAG, "get ok");
+                    LogUtil.d(this, "get ok");
                     stopRefresh();
                     mAdapter.bindData(mData);
                     mAdapter.notifyDataSetChanged();
@@ -67,29 +71,11 @@ public class MyFavActivity extends AppCompatActivity implements SwipeRefreshLayo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_fav);
-        initToolbar();
+        initToolbarNavigation();
         initProgressBar();
         initSwipeRefreshLayout();
         initRecyclerView();
         initData();
-    }
-
-    private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(0, android.R.anim.slide_out_right);
     }
 
     private void initProgressBar() {
@@ -137,7 +123,7 @@ public class MyFavActivity extends AppCompatActivity implements SwipeRefreshLayo
 
     protected void initData() {
         if (mAdapter.getItemCount() == 0) {
-            Log.i(TAG, "first request data");
+            LogUtil.d(this, "first request data");
             requestData();
         } else {
             mProgressBar.setVisibility(View.GONE);
@@ -167,9 +153,21 @@ public class MyFavActivity extends AppCompatActivity implements SwipeRefreshLayo
         if (!isSwipeRefreshing) {
             isSwipeRefreshing = true;
             requestData();
-            Log.i(TAG, "start refresh");
+            LogUtil.d(this, "start refresh");
         } else {
-            Log.i(TAG, "is refreshing...");
+            LogUtil.d(this, "is refreshing...");
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        MobclickAgent.onPause(this);
     }
 }

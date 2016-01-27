@@ -24,7 +24,7 @@ public class PreferenceUtil {
      */
     private static void init(){
         if(sp == null)
-            sp = KZHApp.appContext().getSharedPreferences(SP_NAME,Context.MODE_PRIVATE);
+            sp = KZHApp.getContext().getSharedPreferences(SP_NAME,Context.MODE_PRIVATE);
     }
 
     /**

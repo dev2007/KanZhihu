@@ -25,7 +25,7 @@ public class DbUtil {
 
     private static void init(){
         if(dbHelper == null){
-            dbHelper = new DbHelper(KZHApp.appContext());
+            dbHelper = new DbHelper(KZHApp.getContext());
             db = dbHelper.getReadableDatabase();
         }
     }

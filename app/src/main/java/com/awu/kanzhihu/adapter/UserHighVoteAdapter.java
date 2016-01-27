@@ -32,7 +32,7 @@ public class UserHighVoteAdapter extends RecyclerView.Adapter<UserHighVoteAdapte
     @Override
     public UserHighVoteHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         UserHighVoteHolder holder = new UserHighVoteHolder(
-                LayoutInflater.from(KZHApp.appContext()).inflate(R.layout.item_userhighvote, parent, false),
+                LayoutInflater.from(KZHApp.getContext()).inflate(R.layout.item_userhighvote, parent, false),
                 mClickListener);
         return holder;
     }

@@ -14,8 +14,6 @@ import java.util.Date;
  * Created by awu on 2015-12-22.
  */
 public class CommonUtil {
-    private static final String TAG = "CommonUtil";
-
     /**
      * Convert 2015-01-23 to date format like 20150123
      *

@@ -53,7 +53,7 @@ public class TopUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return holder;
         } else {
             TopUserViewHolder holder = new TopUserViewHolder(
-                    LayoutInflater.from(KZHApp.appContext()).inflate(R.layout.item_topuser, parent, false),
+                    LayoutInflater.from(KZHApp.getContext()).inflate(R.layout.item_topuser, parent, false),
                     mClickListener);
             return holder;
         }

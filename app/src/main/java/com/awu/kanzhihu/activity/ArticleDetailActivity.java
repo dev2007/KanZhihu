@@ -35,14 +35,14 @@ import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.util.PreferenceUtil;
 import com.awu.kanzhihu.view.DividerItemDecoration;
 import com.google.gson.Gson;
+import com.umeng.analytics.MobclickAgent;
 
-public class ArticleDetailActivity extends AppCompatActivity
+import awu.com.awutil.LogUtil;
+
+public class ArticleDetailActivity extends BaseActivity
         implements SwipeRefreshLayout.OnRefreshListener,
         Response.Listener<String>,
-        Response.ErrorListener,
-        View.OnTouchListener {
-    private static final String TAG = "ArticleDetailActivity";
-    private Toolbar mToolbar;
+        Response.ErrorListener{
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private AnswerListAdapter mAdapter;
@@ -51,39 +51,19 @@ public class ArticleDetailActivity extends AppCompatActivity
     private RequestQueue mQueue;
     private String date;
     private String name;
-    private GestureDetector mGestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_detail);
         Intent intent = getIntent();
-        initToolbar();
+        initToolbarNavigation();
         setTitle(intent);
         initQueue();
         initProgressBar();
         initSwipeRefreshLayout();
         initRecyclerView();
         requestData(date, name);
-//        ((CoordinatorLayout) findViewById(R.id.wrap)).setOnTouchListener(this);
-    }
-
-    private void initToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(0, android.R.anim.slide_out_right);
     }
 
     private void setTitle(Intent intent) {
@@ -131,7 +111,7 @@ public class ArticleDetailActivity extends AppCompatActivity
                     startActivity(intent);
                 } else {
                     if (answer == null) return;
-                    Log.i(TAG,""+PreferenceUtil.read(Define.KEY_USEAPPWEB, false));
+                    LogUtil.d(this, "" + PreferenceUtil.read(Define.KEY_USEAPPWEB, false));
                     if ((boolean) PreferenceUtil.read(Define.KEY_USEAPPWEB, false)) {
                         Intent intent = new Intent(getApplicationContext(), AnswerActivity.class);
                         intent.putExtra(Define.KEY_QUESTIONID, answer.getQuestionid());
@@ -151,13 +131,8 @@ public class ArticleDetailActivity extends AppCompatActivity
         mRecyclerView.setAdapter(mAdapter);
 //        mRecyclerView.addItemDecoration(new DividerItemDecoration(this,
 //                DividerItemDecoration.VERTICAL_LIST));
-//        mRecyclerView.addOnItemTouchListener(new RecyclerViewItemTouch(this));
     }
 
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        return ActivityTouch.parentOnTouch(this, v, event);
-    }
 
     /**
      * SwipeRefreshLayout refresh event.
@@ -173,18 +148,18 @@ public class ArticleDetailActivity extends AppCompatActivity
 
     private void requestData(String publishTime, String name) {
         String url = String.format("%s/%s/%s", Define.Url_AnswerList, publishTime, name);
-        Log.i(TAG, url);
+        LogUtil.d(this, url);
         StringRequest stringRequest = new StringRequest(url, this, this);
         mQueue.add(stringRequest);
     }
 
     @Override
     public void onResponse(String response) {
-        Log.i(TAG, response);
+        LogUtil.d(this, response);
         Gson gson = new Gson();
         AnswerCollection collection = gson.fromJson(response, AnswerCollection.class);
         if (!collection.getError().equals("")) {
-            Log.i(TAG, "Response Error:" + collection.getError());
+            LogUtil.d(this, "Response Error:" + collection.getError());
             return;
         }
         mAdapter.bindData(collection);
@@ -195,9 +170,9 @@ public class ArticleDetailActivity extends AppCompatActivity
     @Override
     public void onErrorResponse(VolleyError error) {
         if (error != null && error.getMessage() != null)
-            Log.i(TAG, error.getMessage());
+            LogUtil.d(this, error.getMessage());
         else
-            Log.i(TAG, "i don't know what happen.");
+            LogUtil.d(this, "i don't know what happen.");
         Toast.makeText(this, R.string.hint_refresh, Toast.LENGTH_LONG).show();
         setNoRefresh();
     }
@@ -212,5 +187,17 @@ public class ArticleDetailActivity extends AppCompatActivity
             isRefreshing = false;
             mSwipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        MobclickAgent.onPause(this);
     }
 }

@@ -179,9 +179,9 @@ public class Define {
     }
 
         public enum PostName {
-            Yesterday("yesterday", KZHApp.appContext().getString(R.string.text_yesterday)),
-            Recent("recent", KZHApp.appContext().getString(R.string.text_recent)),
-            Archive("archive", KZHApp.appContext().getString(R.string.text_archive));
+            Yesterday("yesterday", KZHApp.getContext().getString(R.string.text_yesterday)),
+            Recent("recent", KZHApp.getContext().getString(R.string.text_recent)),
+            Archive("archive", KZHApp.getContext().getString(R.string.text_archive));
 
             private String mName;
             private String mDisName;

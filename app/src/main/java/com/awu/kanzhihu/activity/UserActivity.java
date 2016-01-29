@@ -62,6 +62,7 @@ public class UserActivity extends BaseActivity
         initTabWithAdapter();
         initProgressBar();
         requestData();
+        initGestureDetector(mTabLayout);
     }
 
     private void initTabLayout() {

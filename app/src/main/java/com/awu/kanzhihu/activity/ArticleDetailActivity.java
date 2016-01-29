@@ -64,6 +64,7 @@ public class ArticleDetailActivity extends BaseActivity
         initSwipeRefreshLayout();
         initRecyclerView();
         requestData(date, name);
+        initGestureDetectorRecyclerView(mRecyclerView);
     }
 
     private void setTitle(Intent intent) {

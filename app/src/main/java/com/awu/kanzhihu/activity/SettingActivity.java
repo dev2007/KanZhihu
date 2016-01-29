@@ -3,8 +3,11 @@ package com.awu.kanzhihu.activity;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -14,10 +17,12 @@ import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.util.PreferenceUtil;
 import com.umeng.analytics.MobclickAgent;
 
+import awu.com.awutil.LogUtil;
+
 /**
  * SettingActivity.
  */
-public class SettingActivity extends BaseActivity {
+public class SettingActivity extends BaseActivity{
     private CheckBox checkBoxAppWeb;
 
     @Override
@@ -26,10 +31,11 @@ public class SettingActivity extends BaseActivity {
         setContentView(R.layout.activity_setting);
         initToolbarNavigation();
         initSetting();
+        initGestureDetector(checkBoxAppWeb);
     }
 
-    private void initSetting(){
-        checkBoxAppWeb = (CheckBox)findViewById(R.id.cb_appweb);
+    private void initSetting() {
+        checkBoxAppWeb = (CheckBox) findViewById(R.id.cb_appweb);
         checkBoxAppWeb.setChecked((boolean) PreferenceUtil.read(Define.KEY_USEAPPWEB, false));
 
         checkBoxAppWeb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -51,5 +57,4 @@ public class SettingActivity extends BaseActivity {
         super.onStop();
         MobclickAgent.onPause(this);
     }
-
 }

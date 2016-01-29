@@ -30,6 +30,7 @@ public class AboutActivity extends BaseActivity {
         initData();
         initUpdate();
         initSetting();
+        initGestureDetector(textViewVersion);
     }
 
     /**

@@ -46,6 +46,7 @@ public class AnswerActivity extends BaseActivity {
         initFloatingActionButton();
         initProgressBar();
         initWebView(intent);
+        initGestureDetector(mWebView);
     }
 
     @Override

@@ -59,7 +59,7 @@ public class SearchResultActivity extends BaseActivity
         initSwipeRefreshLayout();
         initRecyclerView();
         handleIntent(getIntent());
-        initGestureDetector(mSwipeRefreshLayout);
+        initGestureDetectorRecyclerView(mRecyclerView);
     }
 
     private void initProgressBar() {

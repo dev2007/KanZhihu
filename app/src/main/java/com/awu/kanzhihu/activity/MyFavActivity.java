@@ -76,6 +76,7 @@ public class MyFavActivity extends BaseActivity implements SwipeRefreshLayout.On
         initSwipeRefreshLayout();
         initRecyclerView();
         initData();
+        initGestureDetectorRecyclerView(mRecyclerView);
     }
 
     private void initProgressBar() {

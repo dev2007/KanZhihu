@@ -24,6 +24,7 @@ public class EasyGesture extends GestureDetector.SimpleOnGestureListener {
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
                            float velocityY) {
+        LogUtil.d(this,"fling");
         if (e1.getX() - e2.getX() > verticalMinDistance
                 && Math.abs(velocityX) > minVelocity) {
             LogUtil.d(this, "fling left");

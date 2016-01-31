@@ -45,19 +45,14 @@ public class BaseActivity extends AppCompatActivity implements View.OnTouchListe
     }
 
     protected void initGestureDetectorRecyclerView(final RecyclerView view) {
-        mEasyGesture = new EasyGesture(this) {
-            @Override
-            public boolean onSingleTapConfirmed(MotionEvent e) {
-                return view.performClick();
-            }
-
-        };
+        mEasyGesture = new EasyGesture(this);
         mDetector = new GestureDetectorCompat(this, mEasyGesture);
         view.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
                 LogUtil.d("Base RecyclerView Event", "Touch");
-                return mDetector.onTouchEvent(e);
+                mDetector.onTouchEvent(e);
+                return false;
             }
 
             @Override

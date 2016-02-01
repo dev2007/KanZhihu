@@ -58,7 +58,7 @@ public class PostListFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.i(TAG,"activity:"+getActivity().toString());
+        Log.i(TAG, "activity:" + getActivity().toString());
         if (savedInstanceState != null) {
             latestPublishTime = savedInstanceState.getInt(Define.KEY_PUBLISH_TIME);
             oldestPublishTime = savedInstanceState.getInt(Define.KEY_OLD_PUBLISH_TIME);
@@ -115,6 +115,7 @@ public class PostListFragment extends Fragment implements SwipeRefreshLayout.OnR
                     if (post == null) return;
                     intent.putExtra(Define.KEY_DATE, post.getDate());
                     intent.putExtra(Define.KEY_NAME, post.getName());
+                    intent.putExtra(Define.KEY_PUBLISH_TIME, post.getPublishtime());
                     startActivity(intent);
                 }
             });
@@ -165,7 +166,7 @@ public class PostListFragment extends Fragment implements SwipeRefreshLayout.OnR
 
     private void requestData() {
         StringRequest stringRequest = new StringRequest(Define.Url_PostList, this, this);
-        Log.i(TAG,"url:" + Define.Url_PostList);
+        Log.i(TAG, "url:" + Define.Url_PostList);
         mQueue.add(stringRequest);
     }
 

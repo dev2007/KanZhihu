@@ -1,7 +1,5 @@
 package com.awu.kanzhihu.entity;
 
-import java.util.Date;
-
 /**
  * Created by awu on 2015-12-21.
  */

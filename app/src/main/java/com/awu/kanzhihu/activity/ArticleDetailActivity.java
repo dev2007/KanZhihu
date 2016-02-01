@@ -32,6 +32,7 @@ import com.awu.kanzhihu.entity.AnswerCollection;
 import com.awu.kanzhihu.event.RecyclerViewClickListener;
 import com.awu.kanzhihu.util.CommonUtil;
 import com.awu.kanzhihu.util.Define;
+import com.awu.kanzhihu.util.PostCache;
 import com.awu.kanzhihu.util.PreferenceUtil;
 import com.awu.kanzhihu.view.DividerItemDecoration;
 import com.google.gson.Gson;
@@ -42,7 +43,7 @@ import awu.com.awutil.LogUtil;
 public class ArticleDetailActivity extends BaseActivity
         implements SwipeRefreshLayout.OnRefreshListener,
         Response.Listener<String>,
-        Response.ErrorListener{
+        Response.ErrorListener {
     private ProgressBar mProgressBar;
     private RecyclerView mRecyclerView;
     private AnswerListAdapter mAdapter;
@@ -51,6 +52,7 @@ public class ArticleDetailActivity extends BaseActivity
     private RequestQueue mQueue;
     private String date;
     private String name;
+    private int publishTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class ArticleDetailActivity extends BaseActivity
     private void setTitle(Intent intent) {
         if (intent != null) {
             String disDate = intent.getStringExtra(Define.KEY_DATE);
+            publishTime = intent.getIntExtra(Define.KEY_PUBLISH_TIME, 0);
             date = CommonUtil.convert8Date(disDate);
             name = intent.getStringExtra(Define.KEY_NAME);
             String disName = Define.PostName.getDisplay(name);
@@ -147,8 +150,13 @@ public class ArticleDetailActivity extends BaseActivity
         }
     }
 
-    private void requestData(String publishTime, String name) {
-        String url = String.format("%s/%s/%s", Define.Url_AnswerList, publishTime, name);
+    private void requestData(String date, String name) {
+        if (PostCache.hasCache(publishTime)) {
+            getData(PostCache.get(publishTime));
+            return;
+        }
+
+        String url = String.format("%s/%s/%s", Define.Url_AnswerList, date, name);
         LogUtil.d(this, url);
         StringRequest stringRequest = new StringRequest(url, this, this);
         mQueue.add(stringRequest);
@@ -163,6 +171,12 @@ public class ArticleDetailActivity extends BaseActivity
             LogUtil.d(this, "Response Error:" + collection.getError());
             return;
         }
+        getData(collection);
+    }
+
+    private void getData(AnswerCollection collection) {
+        if (!PostCache.hasCache(publishTime))
+            PostCache.add(publishTime, collection);
         mAdapter.bindData(collection);
         mAdapter.notifyDataSetChanged();
         setNoRefresh();

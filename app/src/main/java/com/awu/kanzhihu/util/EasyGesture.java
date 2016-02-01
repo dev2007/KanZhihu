@@ -41,7 +41,7 @@ public class EasyGesture extends GestureDetector.SimpleOnGestureListener {
     @Override
     public boolean onDown(MotionEvent e) {
         LogUtil.d(this, "Down");
-        return true;
+        return false;
     }
 
     @Override

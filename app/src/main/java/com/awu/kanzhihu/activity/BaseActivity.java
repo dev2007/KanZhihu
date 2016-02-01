@@ -51,13 +51,12 @@ public class BaseActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
                 LogUtil.d("Base RecyclerView Event", "Touch");
-                mDetector.onTouchEvent(e);
-                return false;
+                return mDetector.onTouchEvent(e);
             }
 
             @Override
             public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
+                LogUtil.d("Base Event","onTouchEvent");
             }
 
             @Override

@@ -21,11 +21,12 @@ import com.awu.kanzhihu.util.CommonUtil;
 
 import java.util.ArrayList;
 
+import awu.com.awutil.LogUtil;
+
 /**
  * Created by awu on 2015-12-23.
  */
 public class AnswerListAdapter extends RecyclerView.Adapter<AnswerListAdapter.AnswerListHolder> {
-    private static final String TAG = "AnswerListAdapter";
     private ArrayList<Answer> answerList;
     private RequestQueue mQueue;
     private ImageLoader mImageLoader;
@@ -135,6 +136,7 @@ public class AnswerListAdapter extends RecyclerView.Adapter<AnswerListAdapter.An
 
         @Override
         public void onClick(View v) {
+            LogUtil.d(this,"Click");
             if (mClickListener != null) {
                 mClickListener.onItemClick(v, getPosition());
             }

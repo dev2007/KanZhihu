@@ -50,6 +50,12 @@ public class AnswerActivity extends BaseActivity {
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent ev){
+        super.dispatchTouchEvent(ev);
+        return mDetector.onTouchEvent(ev);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_answer, menu);
         menuItemFav = menu.findItem(R.id.action_fav);

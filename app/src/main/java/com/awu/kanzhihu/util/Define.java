@@ -59,6 +59,16 @@ public class Define {
     public static final String Url_Search = "http://api.kanzhihu.com/searchuser";
 
     /**
+     * url for bing image.
+     */
+    public static final String Url_Bing_Img = "http://tu.ihuan.me/api/bing/go";
+
+    /**
+     * url for bing text.
+     */
+    public static final String Url_Bing_Text = "http://tu.ihuan.me/api/bing/text";
+
+    /**
      * Key for post date.
      */
     public static final String KEY_DATE = "postdate";

@@ -18,6 +18,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.awu.kanzhihu.R;
@@ -32,7 +33,7 @@ import java.util.Date;
 
 import awu.com.awutil.LogUtil;
 
-public class SplashActivity extends AppCompatActivity implements ImageLoader.ImageListener {
+public class SplashActivity extends AppCompatActivity {
     private RequestQueue mQueue;
     private ImageLoader mImageLoader;
     private ImageView imageView;
@@ -41,12 +42,12 @@ public class SplashActivity extends AppCompatActivity implements ImageLoader.Ima
     private ImageButton imageButton;
     private Bitmap bitmap = null;
     private String fileName;
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg){
-            switch (msg.what){
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
                 case 0:
-                   jumpToMain();
+                    jumpToMain();
                     break;
                 default:
                     break;
@@ -63,13 +64,13 @@ public class SplashActivity extends AppCompatActivity implements ImageLoader.Ima
         timerJump();
     }
 
-    private void jumpToMain(){
-        Intent intent = new Intent(this,MainActivity.class);
+    private void jumpToMain() {
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
 
-    private void timerJump(){
+    private void timerJump() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -98,7 +99,6 @@ public class SplashActivity extends AppCompatActivity implements ImageLoader.Ima
         });
 
         mQueue = Volley.newRequestQueue(this);
-        mImageLoader = new ImageLoader(mQueue, KZHApp.bitmapCacheInstance());
     }
 
     private void downLoad() {
@@ -121,28 +121,28 @@ public class SplashActivity extends AppCompatActivity implements ImageLoader.Ima
 
         bitmap = readBitmap();
         if (bitmap != null) {
-            LogUtil.d(this, "read from storage");
+            LogUtil.i("Image", "read from storage");
             setImage();
             return;
         }
 
-        mImageLoader.get(Define.Url_Bing_Img, this, 1920, 1080);
+        ImageRequest imageRequest = new ImageRequest(Define.Url_Bing_Img, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                LogUtil.i("Image", "read from web");
+                bitmap = response;
+                saveBitmap();
+                setImage();
+            }
+        }, 1920, 1080, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        mQueue.add(imageRequest);
     }
 
-    @Override
-    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-        if (response.getBitmap() != null) {
-            LogUtil.d(this, "read from web");
-            bitmap = response.getBitmap();
-            saveBitmap();
-            setImage();
-        }
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError error) {
-
-    }
 
     private void setImage() {
         imageView.setImageBitmap(bitmap);
@@ -154,6 +154,7 @@ public class SplashActivity extends AppCompatActivity implements ImageLoader.Ima
      * save image to storage.
      */
     private void saveBitmap() {
+        LogUtil.i("Image", "save cache");
         new Thread(new Runnable() {
             @Override
             public void run() {

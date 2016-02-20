@@ -5,6 +5,8 @@ import android.content.Context;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
+import com.awu.kanzhihu.actions.ActionCreator;
+import com.awu.kanzhihu.dispatcher.Dispatcher;
 import com.awu.kanzhihu.util.BitmapCache;
 
 import awu.com.awutil.context.EasyApplication;

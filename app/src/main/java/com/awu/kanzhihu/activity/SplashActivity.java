@@ -14,28 +14,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.awu.kanzhihu.R;
-import com.awu.kanzhihu.app.KZHApp;
+import com.awu.kanzhihu.actions.ActionCreator;
+import com.awu.kanzhihu.dispatcher.Dispatcher;
+import com.awu.kanzhihu.stores.SplashStore;
+import com.awu.kanzhihu.stores.Store;
 import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.util.FileUtil;
-
-import org.w3c.dom.Text;
-
-import java.util.Calendar;
-import java.util.Date;
-
-import awu.com.awutil.LogUtil;
+import com.squareup.otto.Subscribe;
 
 public class SplashActivity extends AppCompatActivity {
-    private RequestQueue mQueue;
-    private ImageLoader mImageLoader;
     private ImageView imageView;
     private TextView textViewDescription;
     private Animation animation;
@@ -54,6 +42,9 @@ public class SplashActivity extends AppCompatActivity {
             }
         }
     };
+
+    private SplashStore imageStore;
+    private ActionCreator actionCreator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +89,34 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
 
-        mQueue = Volley.newRequestQueue(this);
+        imageStore = new SplashStore();
+        Dispatcher.instance().register(imageStore);
+        actionCreator = ActionCreator.instance(Dispatcher.instance());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        imageStore.register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        imageStore.unregister(this);
+    }
+
+    @Subscribe
+    public void onStoreChange(Store.StoreChangeEvent event) {
+        render();
+    }
+
+    private void render() {
+        textViewDescription.setText(imageStore.getText());
+        bitmap = imageStore.getImage();
+        if (bitmap != null)
+            setImage();
+        fileName = imageStore.getFileName();
     }
 
     private void downLoad() {
@@ -106,41 +124,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void requestData() {
-        StringRequest stringRequest = new StringRequest(Define.Url_Bing_Text, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                textViewDescription.setText(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-        mQueue.add(stringRequest);
-
-        bitmap = readBitmap();
-        if (bitmap != null) {
-            LogUtil.i("Image", "read from storage");
-            setImage();
-            return;
-        }
-
-        ImageRequest imageRequest = new ImageRequest(Define.Url_Bing_Img, new Response.Listener<Bitmap>() {
-            @Override
-            public void onResponse(Bitmap response) {
-                LogUtil.i("Image", "read from web");
-                bitmap = response;
-                saveBitmap();
-                setImage();
-            }
-        }, 1920, 1080, Bitmap.Config.ARGB_8888, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-        mQueue.add(imageRequest);
+        actionCreator.requestSplash();
     }
 
 
@@ -148,36 +132,5 @@ public class SplashActivity extends AppCompatActivity {
         imageView.setImageBitmap(bitmap);
         imageView.setAnimation(animation);
         imageButton.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * save image to storage.
-     */
-    private void saveBitmap() {
-        LogUtil.i("Image", "save cache");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                FileUtil.saveBitmap(bitmap, bitmapName());
-            }
-        }).start();
-    }
-
-    /**
-     * read image from storage.
-     *
-     * @return
-     */
-    private Bitmap readBitmap() {
-        return FileUtil.readBitmap(bitmapName());
-    }
-
-    private String bitmapName() {
-        int year = Calendar.getInstance().get(Calendar.YEAR);
-        int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        String name = java.lang.String.format("%d_%d_%d", year, month, day);
-        fileName = name + ".png";
-        return name + ".cache";
     }
 }

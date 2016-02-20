@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.awu.kanzhihu.R;
 import com.awu.kanzhihu.app.KZHApp;
 import com.awu.kanzhihu.fragment.PostListFragment;
-import com.awu.kanzhihu.fragment.SettingFragment;
 import com.awu.kanzhihu.fragment.UserFragment;
 import com.awu.kanzhihu.util.Define;
 
@@ -16,17 +15,14 @@ import com.awu.kanzhihu.util.Define;
  * one of the sections/tabs/pages.
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
-    private static final String TAG = "SectionPagerAdataper";
 
     private PostListFragment postListFragment;
     private UserFragment userFragment;
-    private SettingFragment settingFragment;
 
     public SectionsPagerAdapter(FragmentManager fm) {
         super(fm);
         postListFragment = new PostListFragment();
         userFragment = new UserFragment();
-        settingFragment = new SettingFragment();
     }
 
     public void changeUserQuery(Define.ParamName paramName){
@@ -40,8 +36,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return postListFragment;
             case 1:
                 return userFragment;
-//            case 2:
-//                return settingFragment;
             default:
                 return null;
         }
@@ -49,7 +43,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
         return 2;
     }
 
@@ -60,8 +53,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return KZHApp.getContext().getString(R.string.section_article);
             case 1:
                 return KZHApp.getContext().getString(R.string.section_user);
-//            case 2:
-//                return KZHApp.appContext().getString(R.string.section_setting);
         }
         return null;
     }

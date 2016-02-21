@@ -19,7 +19,6 @@ import com.awu.kanzhihu.actions.ActionCreator;
 import com.awu.kanzhihu.dispatcher.Dispatcher;
 import com.awu.kanzhihu.stores.SplashStore;
 import com.awu.kanzhihu.stores.Store;
-import com.awu.kanzhihu.util.Define;
 import com.awu.kanzhihu.util.FileUtil;
 import com.squareup.otto.Subscribe;
 

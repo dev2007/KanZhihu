@@ -65,5 +65,6 @@ public abstract class Store {
      * Sub-class needs do itself functions.
      */
     public class StoreChangeEvent {
+
     }
 }
